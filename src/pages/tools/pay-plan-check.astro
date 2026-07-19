@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PayPlanCheck from '../../components/tools/PayPlanCheck.astro';
+---
+
+<BaseLayout title="Pay Plan Check" description="A browser-local worksheet that identifies pay-plan records and potential time gaps worth reviewing.">
+  <main id="main-content">
+    <header class="tool-hero shell"><div><p class="eyebrow">Pay-plan worksheet · no inputs transmitted</p><h1>Check a pay plan.</h1></div><p>Enter one representative pay period. The result identifies reconciliation points; it does not declare a violation or compliance.</p></header>
+    <section class="tool-stage"><div class="shell"><PayPlanCheck /></div></section>
+    <section class="shell tool-foot"><p><strong>Use the result as a pull list.</strong> Match the written plan, time record, pay detail, and production record for the same dates before reaching a conclusion.</p><a class="text-link" href="/disclaimer/">Read the instrument limits</a></section>
+  </main>
+</BaseLayout>
+
+<style>
+  .tool-hero { display: grid; grid-template-columns: 2fr 1fr; gap: 3rem; align-items: end; padding-block: clamp(3.5rem, 7vw, 6rem); }
+  .tool-hero h1 { margin: 0; }
+  .tool-hero > p { margin: 0; border-top: 3px solid var(--color-ink); padding-top: 1rem; color: var(--color-muted); }
+  .tool-stage { border-block: var(--rule); padding-block: clamp(1.25rem, 4vw, 3rem); background: var(--color-mist); }
+  .tool-foot { display: flex; justify-content: space-between; gap: 2rem; padding-block: var(--space-7); }
+  .tool-foot p { max-width: 45rem; margin: 0; }
+  @media (max-width: 50rem) { .tool-hero { grid-template-columns: 1fr; gap: 2rem; } .tool-foot { align-items: start; flex-direction: column; } }
+</style>

@@ -19,7 +19,7 @@
 - No React, Tailwind, CMS, database, analytics, tracking, cookies, storage, or network submission.
 - Preserve true white `#ffffff`, ink `#10243e`, cobalt `#2457ff`, coral `#f05a47`, sharp ruled ledger geometry, Archivo/Source Sans 3/IBM Plex Mono, and 0–3px radii.
 - Every changed behavior follows RED → GREEN → REFACTOR.
-- Existing custom domains remain untouched during this release.
+- Preserve the existing production site until the replacement has passed exact-commit, route-parity, browser, and rollback checks; move the custom domains only after those gates pass.
 
 ---
 

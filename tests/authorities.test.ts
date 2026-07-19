@@ -9,6 +9,7 @@ test('authority ids are unique and every record states a bounded official propos
 
   for (const authority of authorities) {
     assert.match(authority.url, /^https:\/\//);
+    if ('textUrl' in authority && authority.textUrl) assert.match(authority.textUrl, /^https:\/\//);
     assert.ok(
       ['statute', 'regulation', 'wage-order', 'case', 'agency-guidance'].includes(authority.sourceType),
       `${authority.id} has an unsupported source type`,
@@ -17,6 +18,19 @@ test('authority ids are unique and every record states a bounded official propos
     assert.ok(authority.limits.length >= 20, `${authority.id} needs an explicit limit`);
     assert.equal(authority.checked, '2026-07-18');
   }
+});
+
+test('Brinker and Alvarado preserve source-access and allocation-period boundaries', () => {
+  const brinker = getAuthority('brinker');
+  assert.match(brinker.url, /supreme\.courts\.ca\.gov\/case\/s166350-/);
+  assert.match(brinker.textUrl ?? '', /scocal\.stanford\.edu\/opinion\/brinker-/);
+  assert.match(brinker.statusNote ?? '', /no longer serves/i);
+
+  const alvarado = getAuthority('alvarado');
+  const modification = getAuthority('alvarado-modification');
+  assert.match(alvarado.proposition, /relevant pay period/i);
+  assert.match(modification.proposition, /did not decide.*pay period or workweek/i);
+  assert.match(modification.url, /S232607M\.PDF$/);
 });
 
 test('authority lookup is deterministic and rejects unknown ids', () => {
@@ -46,4 +60,3 @@ test('2026 California and federal constants disclose formulas, sources, and limi
     assert.equal(constant.checked, '2026-07-18');
   }
 });
-

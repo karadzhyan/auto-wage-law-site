@@ -1,13 +1,28 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import LibraryIndex from '../../components/LibraryIndex.astro';
+import SourceCheck from '../../components/SourceCheck.astro';
 ---
 
-<BaseLayout title="Issue library" description="Eight dealership wage-and-hour collision points with bounded explanations and primary sources.">
+<BaseLayout title="Issue library" description="Eight dealership wage-and-hour collision points organized by question, rule architecture, measurement method, evidence limits, and primary authority.">
   <main id="main-content">
-    <header class="index-hero shell"><p class="eyebrow">Eight collision points</p><h1>Trace the issue.</h1><p class="lede">Move from recorded time and incentive pay to the rule that controls the next question.</p></header>
+    <header class="index-hero shell">
+      <p class="eyebrow">Eight collision points · California + federal</p>
+      <div class="hero-grid"><h1>Trace the issue<br /><span>without losing the system.</span></h1><p class="lede">Move from time, pay component, establishment, and asserted route to the controlling rule and proof question. Each guide states what the available record cannot establish alone.</p></div>
+      <SourceCheck sourceChecked="2026-07-18" nextCheck="2027-01-15" checkScope="Eight issue guides, current authority links, calculations, decision sequences, evidence limits, and jurisdictional boundaries." />
+    </header>
     <section class="shell section section--ruled"><LibraryIndex /></section>
+    <section class="section index-foot"><div class="shell"><div><p class="eyebrow">Source boundary</p><h2>Do not stop at the citation.</h2></div><div><p>See the precise proposition, source type, jurisdiction, status note, pinpoint, and explicit inferential limit behind the guides.</p><a class="button" href="/authorities/">Open the authority register</a></div></div></section>
   </main>
 </BaseLayout>
 
-<style>.index-hero { padding-block: var(--space-9); } .index-hero h1 { margin-bottom: 1.5rem; }</style>
+<style>
+  .index-hero { padding-block: var(--space-9) var(--space-7); }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(18rem, 0.8fr); gap: var(--space-8); align-items: end; margin-bottom: var(--space-7); }
+  .hero-grid h1,
+  .hero-grid p { margin-bottom: 0; }
+  .hero-grid h1 span { color: var(--color-cobalt); }
+  .index-foot { background: var(--color-paper-blue); border-block: var(--rule); }
+  .index-foot > div { display: grid; grid-template-columns: minmax(15rem, 0.8fr) minmax(0, 1.2fr); gap: var(--space-8); }
+  @media (max-width: 50rem) { .hero-grid, .index-foot > div { grid-template-columns: 1fr; } }
+</style>

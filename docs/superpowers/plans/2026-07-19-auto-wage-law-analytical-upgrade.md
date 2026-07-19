@@ -482,13 +482,15 @@ Repeat browser and automated checks until agency-signoff quality is reached. Upd
 - [ ] **Step 5: Commit, push, and deploy production**
 
 ```bash
-git add docs/design/fidelity-ledger.md README.md
-git commit -m "chore: complete analytical release verification"
+git add -A
+git diff --cached --check
+git commit -m "feat: ship the analytical Auto Wage Law replacement"
 git push origin main
-npx vercel --prod --yes
+npx vercel build --prod --yes
+npx vercel deploy --prebuilt --prod --yes
 ```
 
-Verify the production URL, GitHub Actions success, canonical routes, redirects, tool interactions, and console. Do not move `autowagelaw.com` or `www.autowagelaw.com` from the rollback project.
+Verify the production URL, GitHub deployment SHA, canonical routes, tools, and console. Probe every route emitted by the prior production build and require a real 301/308 successor response rather than a 200/meta-refresh page. Only after that parity gate passes, move `www.autowagelaw.com` and `autowagelaw.com` to the verified replacement project, preserve `www` as canonical, keep the old READY deployment intact as the cross-project rollback target, and repeat the route probe on the custom domain.
 
 ---
 

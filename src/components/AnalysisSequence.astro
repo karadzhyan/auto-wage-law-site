@@ -1,0 +1,101 @@
+---
+import { analysisStages, type AnalysisStageId } from '../data/analysis';
+
+interface Props {
+  current?: AnalysisStageId;
+  variant?: 'horizontal' | 'vertical' | 'compact';
+  linked?: boolean;
+}
+
+const { current, variant = 'horizontal', linked = true } = Astro.props;
+const SequenceRoot = linked ? 'nav' : 'div';
+---
+
+<SequenceRoot
+  class:list={['analysis-sequence', `analysis-sequence--${variant}`]}
+  aria-label="Six-stage analysis sequence"
+  role={linked ? undefined : 'group'}
+>
+  <ol>
+    {analysisStages.map((stage) => (
+      <li class:list={{ 'is-current': current === stage.id }}>
+        {linked ? (
+          <a href={`/analysis-map/#${stage.id}`} aria-current={current === stage.id ? 'step' : undefined}>
+            <span class="stage-number">{stage.number}</span>
+            <span class="stage-copy">
+              <strong>{stage.label}</strong>
+              {variant !== 'compact' && <small>{stage.question}</small>}
+            </span>
+          </a>
+        ) : (
+          <span class="stage-static" aria-current={current === stage.id ? 'step' : undefined}>
+            <span class="stage-number">{stage.number}</span>
+            <span class="stage-copy">
+              <strong>{stage.label}</strong>
+              {variant !== 'compact' && <small>{stage.question}</small>}
+            </span>
+          </span>
+        )}
+      </li>
+    ))}
+  </ol>
+</SequenceRoot>
+
+<style>
+  .analysis-sequence { --stage-accent: var(--color-cobalt); }
+  ol { display: grid; margin: 0; padding: 0; list-style: none; }
+  li { min-width: 0; }
+  a,
+  .stage-static {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.7rem;
+    height: 100%;
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+  .stage-number {
+    color: var(--stage-accent);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+  .stage-copy { display: grid; align-content: start; gap: 0.35rem; }
+  strong { font-family: var(--font-display); font-size: 1rem; line-height: 1; }
+  small { color: var(--color-muted); font-size: 0.76rem; line-height: 1.35; }
+  li.is-current { --stage-accent: var(--color-cobalt-dark); }
+  li.is-current strong { color: var(--color-cobalt-dark); }
+
+  .analysis-sequence--horizontal ol { grid-template-columns: repeat(6, minmax(0, 1fr)); border-top: 3px solid var(--color-ink); border-left: var(--rule); }
+  .analysis-sequence--horizontal li { border-right: var(--rule); border-bottom: var(--rule); }
+  .analysis-sequence--horizontal a,
+  .analysis-sequence--horizontal .stage-static { min-height: 7.6rem; padding: 1rem 0.8rem; }
+  .analysis-sequence--horizontal li.is-current { box-shadow: inset 0 3px 0 var(--color-cobalt); }
+
+  .analysis-sequence--vertical ol { border-top: 3px solid var(--color-ink); }
+  .analysis-sequence--vertical li { border-bottom: var(--rule); }
+  .analysis-sequence--vertical a,
+  .analysis-sequence--vertical .stage-static { padding: 0.8rem 0.35rem; }
+  .analysis-sequence--vertical li.is-current { border-left: 4px solid var(--color-cobalt); padding-left: 0.45rem; }
+
+  .analysis-sequence--compact ol { grid-template-columns: repeat(6, minmax(0, 1fr)); border-block: var(--rule); }
+  .analysis-sequence--compact li + li { border-left: var(--rule); }
+  .analysis-sequence--compact a,
+  .analysis-sequence--compact .stage-static { grid-template-columns: 1fr; min-height: 2.75rem; gap: 0.2rem; padding: 0.55rem; }
+  .analysis-sequence--compact strong { font-size: 0.78rem; }
+
+  @media (max-width: 54rem) {
+    .analysis-sequence--horizontal ol { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .analysis-sequence--horizontal li:nth-child(3) { border-right: var(--rule); }
+    .analysis-sequence--horizontal a,
+    .analysis-sequence--horizontal .stage-static { min-height: 6.5rem; }
+  }
+
+  @media (max-width: 34rem) {
+    .analysis-sequence--horizontal ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .analysis-sequence--compact ol { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .analysis-sequence--compact li:nth-child(4) { border-left: 0; }
+    .analysis-sequence--compact li:nth-child(n + 4) { border-top: var(--rule); }
+  }
+</style>

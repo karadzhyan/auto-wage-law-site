@@ -1,0 +1,124 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const stages = [
+  ['01', 'Hechos', 'Reconstruya qué trabajo ocurrió, cuándo y bajo qué control.'],
+  ['02', 'Clasificación', 'Separe cada método y componente de pago antes de calcular.'],
+  ['03', 'Medición', 'Alinee horas, tasas, periodos y transacciones comparables.'],
+  ['04', 'Prueba jurídica', 'Aplique cada regla solamente a los hechos que realmente controla.'],
+  ['05', 'Verificación', 'Identifique qué documento prueba algo y qué no puede probar por sí solo.'],
+  ['06', 'Acción', 'Documente la pregunta pendiente, la corrección o el siguiente paso.'],
+];
+---
+
+<BaseLayout
+  lang="es"
+  title="Orientación en español"
+  description="Una orientación en español para usar el método analítico de Auto Wage Law y localizar recursos oficiales de California."
+>
+  <main id="main-content">
+    <header class="es-hero section">
+      <div class="shell es-hero-grid">
+        <div>
+          <p class="eyebrow">Orientación en español · California</p>
+          <h1>Primero trace el sistema de pago.</h1>
+          <p class="lede">Una revisión disciplinada separa el trabajo, el método de pago, la regla jurídica, los documentos y la consecuencia. Esta página explica cómo usar el sitio; no decide un caso individual.</p>
+        </div>
+        <aside class="language-boundary">
+          <p class="data-label">Límite de idioma</p>
+          <strong>El análisis principal está disponible en inglés.</strong>
+          <p>Las autoridades oficiales enlazadas pueden ofrecer materiales en español. Cuando una traducción y el texto oficial difieran, confirme el texto oficial vigente.</p>
+        </aside>
+      </div>
+    </header>
+
+    <section class="method section">
+      <div class="shell">
+        <p class="eyebrow">Método de análisis</p>
+        <h2>Seis pasos. Ningún atajo hacia una conclusión.</h2>
+        <div class="stage-grid">
+          {stages.map(([number, label, description]) => (
+            <article>
+              <span>{number}</span>
+              <h3>{label}</h3>
+              <p>{description}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="paths section">
+      <div class="shell path-grid">
+        <article>
+          <p class="data-label">Ruta del empleador</p>
+          <h2>Revise un sistema de pago.</h2>
+          <p>Defina un puesto, una versión del plan, un periodo y un paquete de documentos coincidentes. El analizador organiza preguntas y registros; no emite una calificación de cumplimiento.</p>
+          <a class="text-link" href="/dealers/">Abrir la ruta para concesionarios</a>
+        </article>
+        <article>
+          <p class="data-label">Ruta del trabajador</p>
+          <h2>Reconstruya un periodo.</h2>
+          <p>Conserve los registros originales y compare el horario, el trabajo realizado, el plan, el estado de pago y cualquier transacción o ajuste del mismo periodo.</p>
+          <a class="text-link" href="/workers/">Abrir la ruta para trabajadores</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="official section">
+      <div class="shell official-grid">
+        <div>
+          <p class="eyebrow">Fuentes y ayuda oficial</p>
+          <h2>Use la fuente apropiada para la pregunta.</h2>
+          <p>Auto Wage Law es un recurso educativo independiente. No sustituye asesoría jurídica, no crea una relación abogado-cliente y no selecciona plazos, remedios ni estrategia para una persona.</p>
+        </div>
+        <div class="official-links">
+          <a href="https://www.dir.ca.gov/dlse/" rel="external">Comisionado Laboral de California <span>Información oficial y materiales en español</span></a>
+          <a href="https://www.dir.ca.gov/dlse/Wage_Claim_forms.html" rel="external">Formularios de reclamo salarial <span>Formularios e instrucciones oficiales</span></a>
+          <a href="/analysis-map/">Mapa analítico de Auto Wage Law <span>Método completo en inglés</span></a>
+          <a href="/disclaimer/">Alcance y límites <span>Qué puede y qué no puede hacer este recurso</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .es-hero { padding-block: clamp(4rem, 9vw, 8rem); }
+  .es-hero-grid { display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(18rem, 0.7fr); gap: clamp(3rem, 8vw, 8rem); align-items: end; }
+  .es-hero h1 { max-width: 13ch; margin-block: 1rem 1.5rem; font-size: clamp(3.3rem, 8vw, 7.7rem); }
+  .es-hero .lede { max-width: 48rem; }
+  .language-boundary { border-top: 4px solid var(--color-signal); padding-top: 1.2rem; }
+  .language-boundary strong { display: block; margin-block: 0.55rem; font-size: 1.15rem; }
+  .language-boundary p:last-child { color: var(--color-muted); }
+  .method { border-block: var(--rule); background: var(--color-paper-blue); }
+  .method h2 { max-width: 17ch; margin-block: 0.8rem 2rem; }
+  .stage-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 3px solid var(--color-ink); border-left: var(--rule); }
+  .stage-grid article { min-width: 0; border-right: var(--rule); border-bottom: var(--rule); padding: clamp(1.2rem, 2vw, 2rem); background: white; }
+  .stage-grid span { color: var(--color-cobalt-dark); font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; }
+  .stage-grid h3 { margin-block: 0.35rem 0.7rem; font-size: 1.35rem; }
+  .stage-grid p { margin: 0; color: var(--color-muted); }
+  .path-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--color-ink); }
+  .path-grid article { padding: clamp(1.5rem, 4vw, 4rem); }
+  .path-grid article + article { border-left: var(--rule); }
+  .path-grid h2 { margin-block: 0.7rem 1rem; }
+  .path-grid .text-link { display: inline-flex; min-height: 2.75rem; align-items: center; gap: 0.45rem; margin-top: 1rem; color: var(--color-cobalt-dark); font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600; }
+  .official { border-top: var(--rule); }
+  .official-grid { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(3rem, 8vw, 8rem); }
+  .official h2 { margin-block: 0.8rem 1rem; }
+  .official-links { border-top: 3px solid var(--color-ink); }
+  .official-links a { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; min-height: 4.5rem; align-items: center; border-bottom: var(--rule); color: var(--color-ink); font-weight: 700; text-decoration: none; }
+  .official-links a:hover { color: var(--color-cobalt-dark); }
+  .official-links span { color: var(--color-muted); font-size: 0.9rem; font-weight: 400; }
+  @media (max-width: 52rem) {
+    .es-hero-grid,
+    .path-grid,
+    .official-grid { grid-template-columns: 1fr; }
+    .stage-grid { grid-template-columns: 1fr 1fr; }
+    .path-grid article + article { border-top: var(--rule); border-left: 0; }
+  }
+  @media (max-width: 28rem) {
+    .stage-grid { grid-template-columns: 1fr; }
+    .official-links a { grid-template-columns: 1fr; gap: 0.2rem; padding-block: 1rem; }
+  }
+</style>

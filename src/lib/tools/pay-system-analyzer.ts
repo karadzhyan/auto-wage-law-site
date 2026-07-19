@@ -86,7 +86,7 @@ function finding(value: AnalyzerFinding): AnalyzerFinding {
 }
 
 function methodLabel(input: AnalyzerInput): string[] {
-  const methods = [input.primaryPayMethod];
+  const methods: string[] = [input.primaryPayMethod];
   if (input.secondaryPayMethod !== 'none') methods.push(input.secondaryPayMethod);
   return methods;
 }
@@ -355,10 +355,11 @@ export function analyzePaySystem(input: AnalyzerInput): AnalyzerResult {
   const recordPull = Array.from(
     new Set(findings.flatMap((candidate) => candidate.proofToPull)),
   );
+  const findingLabel = `${findings.length} independent ${findings.length === 1 ? 'dimension' : 'dimensions'}`;
   const summary =
     hoursToReconcile > 0
-      ? `${hoursToReconcile} hours to classify and reconcile across ${findings.length} independent dimensions.`
-      : `No numerical hour difference appears in the entered totals; ${findings.length} independent dimensions remain in scope.`;
+      ? `${hoursToReconcile} hours to classify and reconcile across ${findingLabel}.`
+      : `No numerical hour difference appears in the entered totals; ${findingLabel} ${findings.length === 1 ? 'remains' : 'remain'} in scope.`;
 
   return {
     summary,

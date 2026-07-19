@@ -1,13 +1,30 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import RoleNavigator from '../../components/RoleNavigator.astro';
+import SourceCheck from '../../components/SourceCheck.astro';
 ---
 
-<BaseLayout title="Pay plans" description="Start with the dealership role and the mechanics of its pay plan.">
+<BaseLayout title="Dealership role maps" description="Five role-specific maps connecting actual duties, pay mechanics, federal and California routes, and the records needed to test them.">
   <main id="main-content">
-    <header class="index-hero shell"><p class="eyebrow">Five role maps</p><h1>Find your pay plan.</h1><p class="lede">The same dealership can run five compensation systems at once. Choose the closest role, then check the actual work and records.</p></header>
+    <header class="index-hero shell">
+      <p class="eyebrow">Five role maps · actual work before title</p>
+      <div class="hero-grid"><h1>Start with the role.<br /><span>Interrogate the pay system.</span></h1><p class="lede">The same dealership can operate several compensation systems at once. Choose the closest role, then test the establishment, actual duties, time categories, pay components, and period-matched proof.</p></div>
+      <SourceCheck sourceChecked="2026-07-18" nextCheck="2027-01-15" checkScope="Five role guides, current authority links, jurisdictional distinctions, evidence domains, worked examples, and cross-role navigation." />
+    </header>
     <section class="shell section section--ruled"><RoleNavigator /></section>
+    <section class="section index-foot"><div class="shell"><div><p class="eyebrow">Cross-role analysis</p><h2>Role labels are only one fact.</h2></div><div><p>Actual duties, entity and establishment facts, workweek activity, payment substance, and the asserted legal route may change the analysis within the same job title.</p><a class="button" href="/analysis-map/#test">Open the decision sequence</a></div></div></section>
   </main>
 </BaseLayout>
 
-<style>.index-hero { padding-block: var(--space-9); } .index-hero h1 { margin-bottom: 1.5rem; }</style>
+<style>
+  .index-hero { padding-block: var(--space-9) var(--space-7); }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(18rem, 0.8fr); gap: var(--space-8); align-items: end; margin-bottom: var(--space-7); }
+  .hero-grid h1,
+  .hero-grid p { margin-bottom: 0; }
+  .hero-grid h1 span { color: var(--color-cobalt); }
+  .index-foot { background: var(--color-ink); color: white; }
+  .index-foot > div { display: grid; grid-template-columns: minmax(15rem, 0.8fr) minmax(0, 1.2fr); gap: var(--space-8); }
+  .index-foot h2 { color: white; }
+  .index-foot p { color: #dbe5f1; }
+  @media (max-width: 50rem) { .hero-grid, .index-foot > div { grid-template-columns: 1fr; } }
+</style>

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://autowagelaw.com/sitemap-index.xml
+Sitemap: https://www.autowagelaw.com/sitemap-index.xml

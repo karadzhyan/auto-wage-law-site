@@ -1,0 +1,168 @@
+<div class="scenario-lab" data-wage-scenario-lab>
+  <form class="scenario-inputs" data-scenario-form novalidate>
+    <div class="panel-head">
+      <div><p class="data-label">Input register · scenario, not forecast</p><h2>Define the entered layers.</h2></div>
+      <span>Ephemeral in this browser</span>
+    </div>
+
+    <fieldset>
+      <legend><span>01</span> Population and period</legend>
+      <div class="field-grid field-grid--two">
+        <label><span>Employees in entered group</span><input name="employees" type="number" min="0" max="100000" step="1" value="12" required /></label>
+        <label><span>Entered workweeks</span><input name="workweeks" type="number" min="0" max="520" step="1" value="156" required /></label>
+      </div>
+      <p class="field-limit">The instrument does not select a group or limitations period. These are user-entered arithmetic bounds.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend><span>02</span> Weekly-hour sensitivities</legend>
+      <div class="sensitivity-inputs">
+        <label><span><b>Low</b> entered gap</span><div><input name="gapLow" type="number" min="0" max="168" step="0.01" value="0.5" required /><em>hr / wk</em></div></label>
+        <label><span><b>Base</b> entered gap</span><div><input name="gapBase" type="number" min="0" max="168" step="0.01" value="2" required /><em>hr / wk</em></div></label>
+        <label><span><b>High</b> entered gap</span><div><input name="gapHigh" type="number" min="0" max="168" step="0.01" value="4" required /><em>hr / wk</em></div></label>
+      </div>
+      <p class="field-limit">Low ≤ Base ≤ High. An entered gap is not a determination that time was worked, compensable, or unpaid.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend><span>03</span> Straight-time layer</legend>
+      <label class="row-field"><span>Entered hourly rate</span><div class="money-field"><b>$</b><input name="straightTimeRate" type="number" min="0" max="10000" step="0.01" value="28" required /><em>/ hr</em></div></label>
+    </fieldset>
+
+    <fieldset>
+      <legend><span>04</span> Optional overtime increment</legend>
+      <label class="toggle"><input name="includeOvertime" type="checkbox" checked /><span>Include an entered overtime-increment layer</span></label>
+      <div class="field-grid field-grid--two" data-overtime-fields>
+        <label><span>Share of entered gap in overtime</span><div class="unit-field"><input name="overtimeShare" type="number" min="0" max="100" step="0.1" value="25" required /><em>%</em></div></label>
+        <label><span>Additional multiplier</span><div class="unit-field"><input name="overtimeIncrement" type="number" min="0" max="10" step="0.01" value="0.5" required /><em>× rate</em></div></label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend><span>05</span> Optional premium-hour layer</legend>
+      <label class="toggle"><input name="includePremiumHours" type="checkbox" /><span>Include separately entered premium hours</span></label>
+      <div class="field-grid field-grid--two" data-premium-fields>
+        <label><span>Premium hours per workweek</span><div class="unit-field"><input name="premiumHoursPerWeek" type="number" min="0" max="168" step="0.01" value="0" required /><em>hr</em></div></label>
+        <label><span>Entered premium rate</span><div class="money-field"><b>$</b><input name="premiumRate" type="number" min="0" max="10000" step="0.01" value="28" required /><em>/ hr</em></div></label>
+      </div>
+    </fieldset>
+
+    <div class="form-error" data-scenario-error role="alert" tabindex="-1" hidden></div>
+    <div class="tool-actions">
+      <button class="button" type="submit">Recalculate layers <span aria-hidden="true">→</span></button>
+      <button class="reset-button" type="reset">Reset synthetic example</button>
+    </div>
+    <p class="privacy-note">Inputs remain in memory on this device and disappear when the page is reloaded or closed.</p>
+  </form>
+
+  <section class="scenario-output" data-scenario-output tabindex="-1" aria-live="polite">
+    <div class="panel-head">
+      <div><p class="data-label">Sensitivity ledger</p><h2>Three entered cases. Three visible layers.</h2></div>
+      <span data-scenario-status>Illustrative defaults</span>
+    </div>
+
+    <div class="table-wrap" tabindex="0" role="region" aria-label="Scenario calculations">
+      <table>
+        <thead><tr><th scope="col">Case</th><th scope="col">Gap / week</th><th scope="col">Straight time</th><th scope="col">OT increment</th><th scope="col">Premium hours</th><th scope="col">Entered total</th></tr></thead>
+        <tbody>
+          <tr data-scenario-row="low"><th scope="row"><span>01</span>Low</th><td data-cell="gap">0.5 hr</td><td data-cell="straight">$26,208</td><td data-cell="overtime">$3,276</td><td data-cell="premium">$0</td><td data-cell="total">$29,484</td></tr>
+          <tr data-scenario-row="base"><th scope="row"><span>02</span>Base</th><td data-cell="gap">2 hr</td><td data-cell="straight">$104,832</td><td data-cell="overtime">$13,104</td><td data-cell="premium">$0</td><td data-cell="total">$117,936</td></tr>
+          <tr data-scenario-row="high"><th scope="row"><span>03</span>High</th><td data-cell="gap">4 hr</td><td data-cell="straight">$209,664</td><td data-cell="overtime">$26,208</td><td data-cell="premium">$0</td><td data-cell="total">$235,872</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <section class="formula-register" aria-labelledby="formula-title">
+      <div><p class="data-label">Formula register</p><h3 id="formula-title">Every total remains decomposable.</h3></div>
+      <dl>
+        <div><dt>Straight time</dt><dd data-formula="straight">employees × workweeks × entered weekly gap × entered rate</dd></div>
+        <div><dt>OT increment</dt><dd data-formula="overtime">employees × workweeks × entered weekly gap × entered overtime share × entered rate × entered increment</dd></div>
+        <div><dt>Premium hours</dt><dd data-formula="premium">employees × workweeks × entered premium hours per workweek × entered premium rate</dd></div>
+      </dl>
+    </section>
+
+    <section class="boundary-register" aria-labelledby="boundary-title">
+      <div><p class="data-label">Interpretation boundary</p><h3 id="boundary-title">Arithmetic on entered assumptions</h3><p data-interpretation-boundary>This is arithmetic on entered assumptions—not a conclusion about covered hours, applicable rates, group composition, time period, responsibility, or recoverable amounts.</p></div>
+      <div><p class="data-label">Excluded from every total</p><ul data-scenario-exclusions></ul></div>
+    </section>
+
+    <button class="print-button no-print" type="button" data-print-scenarios>Print scenario ledger</button>
+  </section>
+</div>
+
+<script>
+  import { initializeWageScenarioLab } from '../../scripts/wage-scenario-lab.ts';
+  initializeWageScenarioLab();
+</script>
+
+<style>
+  .scenario-lab { display: grid; grid-template-columns: minmax(22rem, 5fr) minmax(34rem, 7fr); border: 2px solid var(--color-ink); background: white; }
+  .scenario-inputs,
+  .scenario-output { min-width: 0; padding: clamp(1.2rem, 3vw, 2.5rem); }
+  .scenario-inputs { background: var(--color-paper-blue); }
+  .scenario-output { border-left: 2px solid var(--color-ink); }
+  .panel-head { display: flex; justify-content: space-between; gap: 1rem; align-items: start; margin-bottom: 1.5rem; border-bottom: var(--rule); padding-bottom: 0.8rem; }
+  .panel-head :where(p, h2) { margin-bottom: 0; }
+  .panel-head h2 { max-width: 32rem; font-size: clamp(1.6rem, 3vw, 2.4rem); }
+  .panel-head > span { color: var(--color-muted); font-family: var(--font-mono); font-size: 0.62rem; text-align: right; text-transform: uppercase; }
+  fieldset { margin: 0; border: 0; border-bottom: var(--rule); padding: 1.2rem 0; }
+  legend { display: flex; gap: 0.7rem; margin-bottom: 0.9rem; padding: 0; color: var(--color-ink); font-family: var(--font-display); font-size: 1.1rem; font-weight: 650; }
+  legend span { color: var(--color-cobalt); font-family: var(--font-mono); font-size: 0.68rem; }
+  .field-grid { display: grid; gap: 0.8rem; }
+  .field-grid--two { grid-template-columns: 1fr 1fr; }
+  label > span { display: block; margin-bottom: 0.35rem; color: var(--color-muted); font-size: 0.78rem; font-weight: 600; }
+  input[type='number'] { width: 100%; min-height: 2.75rem; border: 1px solid var(--color-rule); padding: 0.5rem 0.65rem; background: white; color: var(--color-ink); font-family: var(--font-mono); font-weight: 600; }
+  .unit-field,
+  .money-field { position: relative; }
+  .unit-field input { padding-right: 3.8rem; }
+  .money-field input { padding-inline: 1.6rem 3rem; }
+  .unit-field em,
+  .money-field em,
+  .money-field b { position: absolute; top: 0.78rem; color: var(--color-muted); font-family: var(--font-mono); font-size: 0.65rem; font-style: normal; }
+  .unit-field em,
+  .money-field em { right: 0.55rem; }
+  .money-field b { left: 0.6rem; }
+  .row-field { display: grid; grid-template-columns: 1fr minmax(9rem, 0.7fr); gap: 1rem; align-items: center; }
+  .sensitivity-inputs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
+  .sensitivity-inputs label { border-top: 3px solid var(--color-cobalt); padding-top: 0.65rem; }
+  .sensitivity-inputs label:nth-child(2) { border-color: var(--color-ink); }
+  .sensitivity-inputs label:nth-child(3) { border-color: var(--color-cobalt-dark); }
+  .sensitivity-inputs b { color: var(--color-ink); font-family: var(--font-display); }
+  .field-limit,
+  .privacy-note { margin: 0.75rem 0 0; color: var(--color-muted); font-size: 0.72rem; line-height: 1.4; }
+  .privacy-note { font-family: var(--font-mono); }
+  .toggle { display: flex; min-height: 2.75rem; align-items: center; gap: 0.6rem; margin-bottom: 0.8rem; }
+  .toggle input { accent-color: var(--color-cobalt); }
+  .toggle span { margin: 0; color: var(--color-ink); }
+  .tool-actions { display: flex; align-items: center; gap: 1rem; margin-top: 1.4rem; }
+  .reset-button,
+  .print-button { display: inline-flex; min-height: 2.75rem; align-items: center; border: 0; border-bottom: 1px solid currentColor; padding: 0.65rem 0; background: transparent; color: var(--color-cobalt-dark); font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600; cursor: pointer; }
+  .form-error { margin-top: 1rem; border-left: 4px solid var(--color-signal); padding: 0.75rem 1rem; background: #fff4f1; color: #842b21; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; min-width: 39rem; border-collapse: collapse; table-layout: fixed; }
+  th,
+  td { border-right: var(--rule); border-bottom: var(--rule); padding: 0.8rem 0.6rem; text-align: right; vertical-align: middle; }
+  thead th { border-top: 3px solid var(--color-ink); background: var(--color-paper-blue); color: var(--color-muted); font-family: var(--font-mono); font-size: 0.61rem; text-transform: uppercase; }
+  th:first-child { border-left: var(--rule); text-align: left; }
+  tbody th { color: var(--color-ink); font-family: var(--font-display); font-size: 1rem; }
+  tbody th span { display: block; color: var(--color-cobalt); font-family: var(--font-mono); font-size: 0.6rem; }
+  tbody td { color: var(--color-text); font-family: var(--font-mono); font-size: 0.72rem; }
+  tbody td:last-child { color: var(--color-cobalt-dark); font-size: 0.86rem; font-weight: 600; }
+  tbody tr:nth-child(3) { box-shadow: inset 0 -3px 0 var(--color-cobalt-dark); }
+  .formula-register { display: grid; grid-template-columns: minmax(10rem, 0.8fr) minmax(0, 2fr); gap: var(--space-5); margin-top: 2rem; border-top: 3px solid var(--color-ink); padding-top: 1.1rem; }
+  .formula-register h3,
+  .formula-register p { margin-bottom: 0; }
+  .formula-register dl { display: grid; margin: 0; }
+  .formula-register dl div { display: grid; grid-template-columns: 8rem 1fr; gap: 0.8rem; border-bottom: var(--rule); padding-block: 0.65rem; }
+  dt { color: var(--color-cobalt-dark); font-family: var(--font-mono); font-size: 0.62rem; text-transform: uppercase; }
+  dd { margin: 0; font-size: 0.77rem; line-height: 1.4; }
+  .boundary-register { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: var(--space-6); margin-top: 2rem; border-top: 3px solid var(--color-signal); padding-top: 1.1rem; }
+  .boundary-register h3 { margin-bottom: 0.65rem; }
+  .boundary-register p,
+  .boundary-register li { font-size: 0.8rem; line-height: 1.4; }
+  .boundary-register ul { columns: 2; margin: 0; padding-left: 1rem; }
+  .print-button { margin-top: 1.5rem; }
+  @media (max-width: 66rem) { .scenario-lab { grid-template-columns: 1fr; } .scenario-output { border-top: 2px solid var(--color-ink); border-left: 0; } }
+  @media (max-width: 40rem) { .field-grid--two, .sensitivity-inputs, .formula-register, .boundary-register { grid-template-columns: 1fr; } .row-field { grid-template-columns: 1fr; } .formula-register dl div { grid-template-columns: 1fr; gap: 0.2rem; } .boundary-register ul { columns: 1; } .tool-actions { align-items: stretch; flex-direction: column; } .reset-button { align-self: start; } }
+  @media print { .scenario-lab { display: block; border: 0; } .scenario-inputs { display: none; } .scenario-output { border: 0; padding: 0; } }
+</style>

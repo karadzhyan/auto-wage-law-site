@@ -1,27 +1,48 @@
 ---
 import { footerNavigation, primaryNavigation } from '../data/navigation';
 import { site } from '../data/site';
+
+interface Props { lang?: 'en' | 'es'; }
+
+const { lang = 'en' } = Astro.props;
+const isSpanish = lang === 'es';
+const spanishLabels: Record<string, string> = {
+  Dealers: 'Concesionarios',
+  Workers: 'Trabajadores',
+  'Analysis map': 'Mapa de análisis',
+  'Law library': 'Biblioteca jurídica',
+  Tools: 'Herramientas',
+  'Records & evidence': 'Registros y evidencia',
+  'Authority register': 'Registro de autoridades',
+  'Release log': 'Registro de versiones',
+  About: 'Acerca del proyecto',
+  Disclaimer: 'Alcance y límites',
+};
+const localizedFooterNavigation = footerNavigation.map((item) => {
+  if (isSpanish && item.href === '/es/') return { label: 'English', href: '/' };
+  return { ...item, label: isSpanish ? (spanishLabels[item.label] ?? item.label) : item.label };
+});
 ---
 
 <footer class="site-footer">
   <div class="shell footer-grid">
     <div class="footer-lead">
       <a class="footer-brand" href="/">Auto Wage Law</a>
-      <p>{site.shortDescription}</p>
-      <p class="footer-status">{site.status}</p>
+      <p>{isSpanish ? 'Inteligencia sobre salarios y horas · comercio automotriz' : site.shortDescription}</p>
+      <p class="footer-status">{isSpanish ? 'Recurso educativo independiente — no es asesoría jurídica.' : site.status}</p>
     </div>
-    <nav aria-label="Explore">
-      <p class="footer-label">Explore</p>
-      {primaryNavigation.map((item) => <a href={item.href}>{item.label}</a>)}
+    <nav aria-label={isSpanish ? 'Explorar' : 'Explore'}>
+      <p class="footer-label">{isSpanish ? 'Explorar' : 'Explore'}</p>
+      {primaryNavigation.map((item) => <a href={item.href}>{isSpanish ? spanishLabels[item.label] : item.label}</a>)}
     </nav>
-    <nav aria-label="Project information">
-      <p class="footer-label">Project</p>
-      {footerNavigation.map((item) => <a href={item.href}>{item.label}</a>)}
+    <nav aria-label={isSpanish ? 'Información del proyecto' : 'Project information'}>
+      <p class="footer-label">{isSpanish ? 'Proyecto' : 'Project'}</p>
+      {localizedFooterNavigation.map((item) => <a href={item.href}>{item.label}</a>)}
     </nav>
   </div>
   <div class="shell footer-base">
-    <p>{site.reviewed}</p>
-    <p>California and federal orientation. Local ordinances are out of scope unless noted.</p>
+    <p>{isSpanish ? 'Fuentes verificadas el 2026-07-18' : site.reviewed}</p>
+    <p>{isSpanish ? 'Orientación sobre California y la ley federal. Las ordenanzas locales quedan fuera del alcance salvo indicación.' : 'California and federal orientation. Local ordinances are out of scope unless noted.'}</p>
   </div>
 </footer>
 

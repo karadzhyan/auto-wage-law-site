@@ -1,35 +1,39 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import DiagnosticRibbon from '../components/DiagnosticRibbon.astro';
 import AudienceSplit from '../components/AudienceSplit.astro';
-import RoleNavigator from '../components/RoleNavigator.astro';
-import ExposurePreview from '../components/ExposurePreview.astro';
+import AnalysisSequence from '../components/AnalysisSequence.astro';
+import RoleIssueCrosswalk from '../components/RoleIssueCrosswalk.astro';
 import LibraryIndex from '../components/LibraryIndex.astro';
 import DevelopmentsList from '../components/DevelopmentsList.astro';
 ---
 
-<BaseLayout title="Auto Wage Law" description="Independent guidance for the people who run dealerships and the people who work in them.">
+<BaseLayout title="Auto Wage Law" description="A disciplined system for mapping dealership work, pay rules, legal tests, records, and consequences.">
   <main id="main-content">
     <section class="home-hero shell">
       <div class="hero-meta">
-        <p class="eyebrow">Wage & hour intelligence · retail automotive</p>
-        <p>California + federal</p>
+        <p class="eyebrow">Dealership wage-and-hour analysis</p>
+        <p>California + federal · source checked July 2026</p>
       </div>
       <div class="hero-grid">
         <div>
-          <h1>Dealership pay,<br /><span>measured against the law.</span></h1>
-          <p class="lede">Independent guidance for the people who run dealerships and the people who work in them.</p>
+          <h1>Map the pay system before you judge the result.</h1>
+          <p class="lede">A disciplined wage-and-hour review separates the work, the pay rule, the legal test, the records, and the consequence.</p>
           <div class="button-row">
-            <a class="button" href="/pay-plans/">Find your pay plan</a>
-            <a class="button button--quiet" href="/dealers/">Run a self-audit</a>
+            <a class="button" href="/analysis-map/">Open the analysis map</a>
+            <a class="button button--quiet" href="#role-crosswalk">Start with a dealership role</a>
           </div>
         </div>
         <aside>
-          <span class="hero-index">AWL / 01</span>
-          <p>Flat-rate flags, front-end gross, draws, packs, and spiffs: map the compensation system before judging its result.</p>
+          <span class="hero-index">METHOD / 01–06</span>
+          <p><strong>Facts → Classify → Measure → Test → Verify → Act</strong></p>
+          <p>A pay label cannot select its own legal rule. One record cannot prove more than the event it captures.</p>
         </aside>
       </div>
-      <DiagnosticRibbon />
+      <AnalysisSequence />
+    </section>
+
+    <section id="role-crosswalk" class="section shell">
+      <RoleIssueCrosswalk />
     </section>
 
     <section class="section section--mist">
@@ -44,31 +48,13 @@ import DevelopmentsList from '../components/DevelopmentsList.astro';
 
     <section class="section shell">
       <div class="section-heading">
-        <div><p class="eyebrow">Pay-plan navigator</p><h2>Start with how the store pays.</h2></div>
-        <p>Each role opens a focused map of the pay mechanics, records, and legal tests worth inspecting.</p>
-      </div>
-      <RoleNavigator />
-    </section>
-
-    <section class="section section--mist">
-      <div class="shell">
-        <div class="section-heading">
-          <div><p class="eyebrow">Exposure snapshot</p><h2>Make the assumption visible.</h2></div>
-          <p>A directional model is useful only when the input, math, and exclusions stay in view.</p>
-        </div>
-        <ExposurePreview />
-      </div>
-    </section>
-
-    <section class="section shell">
-      <div class="section-heading">
         <div><p class="eyebrow">Open law library</p><h2>The collision points.</h2></div>
         <p>Move from the pay system to the wage-and-hour issue without losing the dealership context.</p>
       </div>
       <LibraryIndex />
     </section>
 
-    <section class="section section--mist">
+    <section class="section section--mist release-strip">
       <div class="shell">
         <div class="section-heading">
           <div><p class="eyebrow">Developments</p><h2>What moved.</h2></div>
@@ -85,11 +71,12 @@ import DevelopmentsList from '../components/DevelopmentsList.astro';
   .hero-meta { display: flex; justify-content: space-between; gap: 1rem; border-bottom: var(--rule); padding-bottom: 0.8rem; }
   .hero-meta p { margin: 0; color: var(--color-muted); font-family: var(--font-mono); font-size: var(--text-xs); text-transform: uppercase; }
   .hero-grid { display: grid; grid-template-columns: minmax(0, 9fr) minmax(14rem, 3fr); gap: var(--space-7); padding-top: clamp(3rem, 7vw, 6.5rem); }
-  .hero-grid h1 { max-width: 66rem; margin-bottom: 2rem; font-size: clamp(3.5rem, 8.4vw, 8rem); line-height: 0.84; }
-  .hero-grid h1 span { color: var(--color-cobalt); }
+  .hero-grid h1 { max-width: 66rem; margin-bottom: 2rem; font-size: clamp(3.35rem, 7.6vw, 7.4rem); line-height: 0.86; }
+  .hero-grid h1 { color: var(--color-ink); }
   .hero-grid .lede { margin-bottom: 2rem; }
   .hero-grid aside { align-self: end; border-top: 3px solid var(--color-ink); padding-top: 1rem; }
-  .hero-grid aside p { margin: 1rem 0 0; color: var(--color-muted); font-size: 0.95rem; }
+  .hero-grid aside p { margin: 0.8rem 0 0; color: var(--color-muted); font-size: 0.9rem; }
+  .hero-grid aside strong { color: var(--color-ink); font-family: var(--font-mono); font-size: 0.74rem; }
   .hero-index { color: var(--color-cobalt-dark); font-family: var(--font-mono); font-size: var(--text-xs); font-weight: 600; }
   @media (max-width: 50rem) { .home-hero { padding-top: 1.25rem; } .hero-grid { grid-template-columns: 1fr; } .hero-grid aside { display: none; } .hero-meta p:last-child { display: none; } }
 </style>

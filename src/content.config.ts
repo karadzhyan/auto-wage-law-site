@@ -8,17 +8,19 @@ const articles = defineCollection({
     title: z.string(),
     description: z.string(),
     section: z.enum(['pay-plans', 'issues']),
-    reviewed: z.string(),
-    confidence: z.literal('reviewed'),
+    question: z.string(),
+    analysisStep: z.enum(['facts', 'classify', 'measure', 'test', 'verify', 'act']),
+    jurisdictions: z.array(z.enum(['california', 'federal'])).min(1),
+    sourceChecked: z.string(),
+    checkScope: z.string(),
+    nextCheck: z.string(),
+    authorityIds: z.array(z.string()).min(1),
+    evidenceDomains: z.array(
+      z.enum(['time', 'system', 'output', 'pay', 'plan', 'establishment', 'expense']),
+    ).min(1),
     order: z.number(),
     feature: z.enum(['workday-timeline']).optional(),
     related: z.array(z.string()).default([]),
-    sources: z.array(
-      z.object({
-        label: z.string(),
-        url: z.url(),
-      }),
-    ),
   }),
 });
 

@@ -2,26 +2,37 @@
 import { primaryNavigation } from '../data/navigation';
 import ArrowIcon from './ArrowIcon.astro';
 
+interface Props { lang?: 'en' | 'es'; }
+
+const { lang = 'en' } = Astro.props;
+const isSpanish = lang === 'es';
 const path = Astro.url.pathname;
 const isCurrent = (href: string) => href === '/' ? path === '/' : path.startsWith(href);
+const spanishLabels: Record<string, string> = {
+  Dealers: 'Concesionarios',
+  Workers: 'Trabajadores',
+  'Analysis map': 'Mapa de análisis',
+  'Law library': 'Biblioteca jurídica',
+  Tools: 'Herramientas',
+};
 ---
 
 <header class="site-header no-print">
   <div class="header-shell shell">
-    <a class="brand" href="/" aria-label="Auto Wage Law home">
+    <a class="brand" href="/" aria-label={isSpanish ? 'Inicio de Auto Wage Law' : 'Auto Wage Law home'}>
       <span class="brand-mark" aria-hidden="true">AWL</span>
       <span class="brand-name">Auto Wage Law</span>
     </a>
     <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">
-      <span>Menu</span>
+      <span>{isSpanish ? 'Menú' : 'Menu'}</span>
       <span class="menu-lines" aria-hidden="true"></span>
     </button>
-    <nav id="site-nav" class="site-nav" aria-label="Primary navigation">
+    <nav id="site-nav" class="site-nav" aria-label={isSpanish ? 'Navegación principal' : 'Primary navigation'}>
       {primaryNavigation.map((item) => (
-        <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
+        <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{isSpanish ? spanishLabels[item.label] : item.label}</a>
       ))}
-      <a class="header-tool" href="/tools/pay-plan-check/">
-        Check a pay plan <ArrowIcon />
+      <a class="header-tool" href="/tools/pay-system-analyzer/">
+        {isSpanish ? 'Analizar un sistema de pago' : 'Analyze a pay system'} <ArrowIcon />
       </a>
     </nav>
   </div>
@@ -47,7 +58,7 @@ const isCurrent = (href: string) => href === '/' ? path === '/' : path.startsWit
   });
 
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') {
+    if (event.key === 'Escape' && menuButton?.getAttribute('aria-expanded') === 'true') {
       closeMenu();
       menuButton?.focus();
     }

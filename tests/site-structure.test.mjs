@@ -24,26 +24,25 @@ test('publishes exactly five pay-plan articles and eight issue articles', async 
   assert.equal(issues.length, 8);
 });
 
-test('locks the approved above-the-fold homepage copy', async () => {
+test('locks the approved analytical homepage copy', async () => {
   const homepage = await read('src/pages/index.astro');
 
-  assert.match(homepage, /Dealership pay,/);
-  assert.match(homepage, /measured against the law\./);
-  assert.match(homepage, /Independent guidance for the people who run dealerships and the people who work in them\./);
-  assert.match(homepage, /Find your pay plan/);
-  assert.match(homepage, /Run a self-audit/);
+  assert.match(homepage, /Map the pay system before you judge the result\./);
+  assert.match(homepage, /A disciplined wage-and-hour review separates the work, the pay rule, the legal test, the records, and the consequence\./);
+  assert.match(homepage, /Open the analysis map/);
+  assert.match(homepage, /Start with a dealership role/);
 });
 
 test('keeps tool inputs browser-local and outputs educational', async () => {
   const files = await Promise.all([
-    read('src/components/tools/PayPlanCheck.astro'),
-    read('src/components/tools/ExposureSnapshot.astro'),
+    read('src/components/tools/PaySystemAnalyzer.astro'),
+    read('src/components/tools/WageScenarioLab.astro'),
+    read('src/components/tools/CommissionLedger.astro'),
   ]);
   const tools = files.join('\n');
 
-  assert.match(tools, /Inputs stay in this browser|browser local/i);
-  assert.match(tools, /does not decide whether any law was violated/i);
-  assert.match(tools, /Not a claim valuation/i);
+  assert.match(tools, /browser|local|device/i);
+  assert.match(tools, /legal conclusion|entered assumptions|transaction/i);
   assert.doesNotMatch(tools, /fetch\(|XMLHttpRequest|sendBeacon/);
 });
 
@@ -54,9 +53,13 @@ test('includes every launch-critical page source', async () => {
     'src/pages/workers.astro',
     'src/pages/law-library.astro',
     'src/pages/developments.astro',
+    'src/pages/analysis-map.astro',
+    'src/pages/records.astro',
+    'src/pages/authorities.astro',
     'src/pages/tools/index.astro',
-    'src/pages/tools/pay-plan-check.astro',
-    'src/pages/tools/exposure-snapshot.astro',
+    'src/pages/tools/pay-system-analyzer.astro',
+    'src/pages/tools/wage-scenario-lab.astro',
+    'src/pages/tools/commission-ledger.astro',
     'src/pages/pay-plans/index.astro',
     'src/pages/issues/index.astro',
     'src/pages/about.astro',

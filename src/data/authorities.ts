@@ -5,6 +5,7 @@ export type Authority = {
   jurisdiction: 'federal' | 'california';
   sourceType: 'statute' | 'regulation' | 'wage-order' | 'case' | 'agency-guidance';
   url: string;
+  textUrl?: string;
   proposition: string;
   limits: string;
   pinpoint?: string;
@@ -495,11 +496,13 @@ export const authorities = [
     title: 'Brinker Restaurant Corp. v. Superior Court, 53 Cal.4th 1004 (2012)',
     jurisdiction: 'california',
     sourceType: 'case',
-    url: 'https://supreme.courts.ca.gov/case-information/briefs-argued-cases/november-8-9-and-10-2011-oral-argument-cases',
+    url: 'https://supreme.courts.ca.gov/case/s166350-brinker-restaurant-v-sc-hohnbaum',
+    textUrl: 'https://scocal.stanford.edu/opinion/brinker-restaurant-corp-v-super-ct-34063',
     proposition: 'An employer must relieve meal-period duty, relinquish control, permit an uninterrupted opportunity, and neither impede nor discourage the period.',
     limits: 'The employer need not police a bona fide relieved meal, although known work remains compensable and the records may require explanation.',
     pinpoint: '53 Cal.4th 1038–1041',
     checked: '2026-07-18',
+    statusNote: 'The Court no longer serves its former S166350 opinion PDF from the archive; the official case record and a stable public full-text copy are both provided.',
   },
   {
     id: 'donohue',
@@ -604,9 +607,21 @@ export const authorities = [
     jurisdiction: 'california',
     sourceType: 'case',
     url: 'https://www.courts.ca.gov/opinions/archive/S232607.PDF',
-    proposition: 'A flat-sum attendance-type bonus is allocated over nonovertime hours actually worked and receives the specified overtime multiplier.',
-    limits: 'The holding is expressly limited to flat-sum bonuses; production, piece-rate, and commission pay require different methods.',
+    proposition: 'The flat-sum attendance-type bonus at issue was allocated over nonovertime hours actually worked in the relevant pay period and received the specified overtime multiplier.',
+    limits: 'The holding is expressly limited to flat-sum bonuses; production, piece-rate, and commission pay require different methods, and the modification reserves the general pay-period/workweek question.',
     pinpoint: '4 Cal.5th 561 n.6, 562, 573',
+    checked: '2026-07-18',
+  },
+  {
+    id: 'alvarado-modification',
+    shortLabel: 'Alvarado modification',
+    title: 'Alvarado v. Dart Container Corp. of California — order modifying opinion (Apr. 25, 2018)',
+    jurisdiction: 'california',
+    sourceType: 'case',
+    url: 'https://www.courts.ca.gov/opinions/archive/S232607M.PDF',
+    proposition: 'The court followed the parties’ use of the pay period as the calculation basis but expressly did not decide whether California regular rate is properly calculated by pay period or workweek.',
+    limits: 'The reservation does not displace the flat-sum-bonus divisor actually decided or authorize averaging federal workweeks.',
+    pinpoint: 'Order modifying opinion, pp. 1–2',
     checked: '2026-07-18',
   },
   {
@@ -637,17 +652,16 @@ export const authorities = [
 
 export type AuthorityId = (typeof authorities)[number]['id'];
 
-const authorityById = new Map<AuthorityId, (typeof authorities)[number]>(
+const authorityById = new Map<AuthorityId, Authority>(
   authorities.map((authority) => [authority.id, authority]),
 );
 
-export function getAuthority(id: AuthorityId): (typeof authorities)[number] {
+export function getAuthority(id: AuthorityId): Authority {
   const authority = authorityById.get(id);
   if (!authority) throw new RangeError(`Unknown authority: ${id}`);
   return authority;
 }
 
-export function getAuthorities(ids: readonly AuthorityId[]): (typeof authorities)[number][] {
+export function getAuthorities(ids: readonly AuthorityId[]): Authority[] {
   return ids.map(getAuthority);
 }
-

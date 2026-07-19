@@ -1,44 +1,97 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-const steps = [
-  { number: '01', title: 'Find your role', body: 'Use the closest pay-plan page, then check whether the work and pay method actually match.', href: '/pay-plans/' },
-  { number: '02', title: 'Collect the same period', body: 'Keep the pay plan, wage statement, time record, schedule, and production detail for matching dates.', href: '/tools/pay-plan-check/' },
-  { number: '03', title: 'Write down the gap', body: 'Record meetings, waiting, training, opening, closing, or other work missing from the paid-time story.', href: '/issues/off-the-clock/' },
-  { number: '04', title: 'Check time limits and options', body: 'Deadlines and remedies depend on the claim and facts. A specific situation deserves specific advice.', href: '/disclaimer/' },
+import AnalysisSequence from '../components/AnalysisSequence.astro';
+import EvidenceMap from '../components/EvidenceMap.astro';
+import SourceCheck from '../components/SourceCheck.astro';
+
+const reconstruction = [
+  { number: '01', title: 'Fix one period', body: 'Write down the employing entity, work location, role, workday, workweek, pay period, and operative plan dates. Do not mix a later plan or statement into the first packet.' },
+  { number: '02', title: 'Describe actual work', body: 'List opening, closing, waiting, meetings, training, follow-up, repair, deal, dispatch, cleanup, travel, break coverage, and remote activity without assuming how each interval is treated.' },
+  { number: '03', title: 'Separate pay components', body: 'Identify hourly wages, salary, piece or flat rate, commission, draw, bonus, premium, reimbursement, credit, and debit by formula and purpose.' },
+  { number: '04', title: 'Preserve original records', body: 'Keep complete files, metadata, raw exports, edits, messages, and statement pages. A cropped screenshot may omit the date, formula, code, or audit history needed later.' },
+  { number: '05', title: 'Reconcile by date and event', body: 'Match the schedule, raw time, system activity, repair order or deal, pay register, statement, and later correction. Mark corroboration and contradiction separately.' },
+  { number: '06', title: 'Name the unresolved question', body: 'State the missing fact or record precisely. A gap between records is a question to investigate, not automatically a wage amount or legal result.' },
 ];
 ---
 
-<BaseLayout title="For workers" description="A practical path for understanding a dealership pay plan and organizing the records behind it.">
+<BaseLayout title="For workers" description="A period-matched method for dealership workers to reconstruct work, pay mechanics, governing questions, and the record without overclaiming what one document proves.">
   <main id="main-content">
     <header class="audience-hero shell">
-      <p class="eyebrow">Worker path · understand the record</p>
-      <h1>Know what your pay plan actually owes you.</h1>
-      <p class="lede">Start with the role, the full workday, and a matched set of records. The label on a pay plan is not the end of the analysis.</p>
+      <p class="eyebrow">Worker path · period reconstruction</p>
+      <div class="hero-grid">
+        <h1>Reconstruct the work, the pay rule, and the record.</h1>
+        <p class="lede">Start with one matched period. Preserve what happened, how the plan converted it into pay, what the statement reports, and which source or missing fact controls the next question.</p>
+      </div>
+      <AnalysisSequence />
+      <SourceCheck sourceChecked="2026-07-18" nextCheck="2027-01-15" checkScope="Worker reconstruction sequence, evidence boundaries, source-check language, and links to role-specific guides." />
     </header>
-    <section class="shell section review-path">
-      {steps.map((step) => (
-        <a href={step.href}>
-          <span>{step.number}</span><strong>{step.title}</strong><p>{step.body}</p><b aria-hidden="true">→</b>
-        </a>
-      ))}
+
+    <section class="section shell" aria-labelledby="reconstruction-title">
+      <div class="section-heading"><div><p class="eyebrow">Six-part reconstruction</p><h2 id="reconstruction-title">Build a packet another person can audit.</h2></div><p>The strongest record identifies dates, systems, transaction or production units, plan versions, and contradictions. It distinguishes personal recollection from documentary proof without discarding either.</p></div>
+      <ol class="reconstruction-list">{reconstruction.map((item) => <li><span>{item.number}</span><h3>{item.title}</h3><p>{item.body}</p></li>)}</ol>
     </section>
-    <section class="worker-cta section">
-      <div class="shell"><p class="eyebrow">Start with the pay system</p><h2>Five dealership roles. Five different starting points.</h2><a class="button" href="/pay-plans/">Find your pay plan</a></div>
+
+    <section class="section section--mist"><div class="shell"><EvidenceMap ids={['time', 'system', 'output', 'pay', 'plan']} title="The five-record core" /></div></section>
+
+    <section class="section shell period-table">
+      <div><p class="eyebrow">Period worksheet</p><h2>Separate observation, record, and inference.</h2><p>Use one row per activity, production unit, deal, credit, debit, break event, or correction. Preserve uncertainty explicitly.</p></div>
+      <div class="worksheet-example" tabindex="0" role="region" aria-label="Scrollable example period worksheet">
+        <table>
+          <thead><tr><th scope="col">Date / event</th><th scope="col">Observed or recalled</th><th scope="col">Record that supports it</th><th scope="col">Record that conflicts</th><th scope="col">Question still open</th></tr></thead>
+          <tbody>
+            <tr><td>06/18 · close</td><td>Customer follow-up after recorded shift</td><td>CRM activity at 7:18 p.m.</td><td>Timecard ends 6:52 p.m.</td><td>What activity occurred, for how long, and with whose knowledge?</td></tr>
+            <tr><td>06/30 · pay</td><td>Commission credit and separate draw entry</td><td>Statement and deal line</td><td>Plan version unavailable</td><td>What formula and earning condition governed this transaction?</td></tr>
+            <tr><td>07/31 · debit</td><td>Prior transaction amount reversed</td><td>Debit line and cancellation event</td><td>No reason code on statement</td><td>Which plan condition connects the event to this specific debit?</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section worker-actions">
+      <div class="shell action-grid">
+        <div><p class="eyebrow">Choose the next working surface</p><h2>Start with role. Then test the record.</h2></div>
+        <div class="action-links">
+          <a href="/pay-plans/"><span>Role maps</span><strong>Open the closest dealership role</strong></a>
+          <a href="/tools/pay-system-analyzer/"><span>Browser-local instrument</span><strong>Organize one pay system</strong></a>
+          <a href="/records/"><span>Evidence register</span><strong>See what each record can prove</strong></a>
+          <a href="/tools/wage-scenario-lab/"><span>Entered arithmetic</span><strong>Test low, base, and high assumptions</strong></a>
+        </div>
+        <p class="scope-note">Deadlines, forum choices, protected activity, representation, and available remedies depend on facts and law outside a general educational page. For a specific decision, obtain advice tied to the actual records and dates.</p>
+      </div>
     </section>
   </main>
 </BaseLayout>
 
 <style>
-  .audience-hero { padding-block: var(--space-9); }
-  .audience-hero h1 { max-width: 69rem; margin-bottom: 1.5rem; }
-  .review-path { border-top: 3px solid var(--color-ink); }
-  .review-path a { display: grid; grid-template-columns: 3rem minmax(13rem, 1fr) minmax(18rem, 2fr) 2rem; gap: var(--space-5); align-items: center; min-height: 8rem; border-bottom: var(--rule); color: var(--color-text); text-decoration: none; }
-  .review-path a:hover { background: var(--color-paper-blue); }
-  .review-path span { color: var(--color-cobalt-dark); font-family: var(--font-mono); font-size: var(--text-xs); }
-  .review-path strong { color: var(--color-ink); font-family: var(--font-display); font-size: var(--text-h3); line-height: 1; }
-  .review-path p { margin: 0; color: var(--color-muted); }
-  .review-path b { color: var(--color-cobalt); font-size: 1.5rem; }
-  .worker-cta { background: var(--color-paper-blue); border-block: var(--rule); }
-  .worker-cta h2 { max-width: 55rem; }
-  @media (max-width: 48rem) { .review-path a { grid-template-columns: 2rem 1fr 1rem; padding-block: 1.5rem; } .review-path p { grid-column: 2 / -1; } }
+  .audience-hero { padding-block: var(--space-9) var(--space-7); }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(18rem, 0.8fr); gap: var(--space-8); align-items: end; margin-bottom: var(--space-7); }
+  .hero-grid h1,
+  .hero-grid p { margin-bottom: 0; }
+  .reconstruction-list { margin: 0; padding: 0; border-top: 4px solid var(--color-ink); list-style: none; }
+  .reconstruction-list li { display: grid; grid-template-columns: 3rem minmax(12rem, 0.8fr) minmax(0, 1.5fr); gap: var(--space-5); border-bottom: var(--rule); padding-block: 1.15rem; }
+  .reconstruction-list span { color: var(--color-cobalt); font-family: var(--font-mono); font-size: 0.7rem; }
+  .reconstruction-list h3,
+  .reconstruction-list p { margin: 0; }
+  .reconstruction-list h3 { font-size: 1.25rem; }
+  .reconstruction-list p { font-size: 0.9rem; }
+  .period-table { display: grid; grid-template-columns: minmax(15rem, 0.7fr) minmax(0, 2fr); gap: var(--space-8); }
+  .worksheet-example { overflow-x: auto; }
+  table { width: 100%; min-width: 56rem; border-collapse: collapse; table-layout: fixed; }
+  th,
+  td { border-right: var(--rule); border-bottom: var(--rule); padding: 0.75rem 0.65rem; text-align: left; vertical-align: top; }
+  thead th { border-top: 4px solid var(--color-ink); background: var(--color-paper-blue); color: var(--color-muted); font-family: var(--font-mono); font-size: 0.62rem; text-transform: uppercase; }
+  th:first-child,
+  td:first-child { border-left: var(--rule); }
+  td { font-size: 0.78rem; line-height: 1.4; }
+  td:last-child { box-shadow: inset 3px 0 0 var(--color-signal); }
+  .worker-actions { background: var(--color-ink); color: white; }
+  .action-grid { display: grid; grid-template-columns: minmax(15rem, 0.8fr) minmax(0, 1.4fr); gap: var(--space-8); }
+  .action-grid h2 { color: white; }
+  .action-links { border-top: 1px solid #59708b; }
+  .action-links a { display: grid; grid-template-columns: 9rem 1fr; gap: var(--space-4); border-bottom: 1px solid #344a64; padding-block: 0.85rem; color: white; text-decoration: none; }
+  .action-links a:hover { color: #9ab3ff; }
+  .action-links span { color: #aebdd0; font-family: var(--font-mono); font-size: 0.62rem; text-transform: uppercase; }
+  .scope-note { grid-column: 2; margin: 0; border-left: 4px solid var(--color-signal); padding-left: 1rem; color: #c9d6e5; font-size: 0.82rem; }
+  @media (max-width: 56rem) { .hero-grid, .period-table, .action-grid { grid-template-columns: 1fr; } .scope-note { grid-column: 1; } }
+  @media (max-width: 38rem) { .reconstruction-list li { grid-template-columns: 2rem 1fr; } .reconstruction-list p { grid-column: 2; } .action-links a { grid-template-columns: 1fr; gap: 0.2rem; } }
 </style>

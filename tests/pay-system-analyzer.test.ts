@@ -32,6 +32,7 @@ test('ordinary hourly input does not receive piece-rate or commission-plan false
   assert.equal(result.hoursToReconcile, 0);
   assert.doesNotMatch(text, /226\.2|piece-rate statement|signed commission plan/i);
   assert.ok(result.findings.some((finding) => finding.status === 'supported-by-inputs'));
+  assert.match(result.summary, /1 independent dimension remains in scope/i);
 });
 
 test('piece-rate technician fixture surfaces separate classification, measurement, and record questions', () => {

@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AuthorityStack from '../components/AuthorityStack.astro';
+import SourceCheck from '../components/SourceCheck.astro';
+import { authorities, type AuthorityId } from '../data/authorities';
+
+const federal = authorities.filter((authority) => authority.jurisdiction === 'federal').map((authority) => authority.id) as AuthorityId[];
+const california = authorities.filter((authority) => authority.jurisdiction === 'california').map((authority) => authority.id) as AuthorityId[];
+---
+
+<BaseLayout title="Authority register" description="The primary statutes, regulations, wage orders, cases, and official guidance supporting Auto Wage Law—with a proposition and limit for each source.">
+  <main id="main-content">
+    <header class="authority-hero shell">
+      <p class="eyebrow">Authority register · {authorities.length} source records</p>
+      <div class="hero-grid">
+        <h1>What it says.<br /><span>What it does not decide.</span></h1>
+        <p class="lede">Every source is attached to a bounded proposition. The limit is explicit so a federal exemption, California wage order, agency page, or judicial holding is not stretched beyond its lane.</p>
+      </div>
+      <SourceCheck sourceChecked="2026-07-18" nextCheck="2027-01-15" checkScope="Official-link availability, current regulatory text, decision status, threshold sources, source propositions, and stated inferential limits." authorityCount={authorities.length} />
+    </header>
+
+    <section class="section shell register-intro">
+      <div><p class="eyebrow">How to read the register</p><h2>Authority is not a pile of links.</h2></div>
+      <dl>
+        <div><dt>Proposition</dt><dd>The precise rule or interpretive point for which this source is cited.</dd></div>
+        <div><dt>What it does not decide</dt><dd>The jurisdictional, factual, methodological, or remedial conclusion that cannot be imported from that source alone.</dd></div>
+        <div><dt>Source checked</dt><dd>The date the official source, status, and summary were last checked—not an anonymous confidence rating.</dd></div>
+      </dl>
+    </section>
+
+    <section class="section section--mist"><div class="shell"><AuthorityStack ids={federal} title="Federal authority" /></div></section>
+    <section class="section shell"><AuthorityStack ids={california} title="California authority" /></section>
+  </main>
+</BaseLayout>
+
+<style>
+  .authority-hero { padding-block: clamp(3rem, 7vw, 6rem) var(--space-7); }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(18rem, 1fr); gap: var(--space-7); align-items: end; margin-bottom: var(--space-7); }
+  h1 { margin-bottom: 0; }
+  h1 span { color: var(--color-cobalt); }
+  .hero-grid p { margin-bottom: 0; }
+  .register-intro { display: grid; grid-template-columns: minmax(15rem, 1fr) minmax(0, 2fr); gap: var(--space-8); border-top: 4px solid var(--color-ink); }
+  .register-intro dl { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); margin: 0; }
+  .register-intro dt { margin-bottom: 0.5rem; color: var(--color-cobalt-dark); font-family: var(--font-mono); font-size: 0.67rem; font-weight: 600; text-transform: uppercase; }
+  .register-intro dd { margin: 0; font-size: 0.9rem; }
+  @media (max-width: 56rem) { .hero-grid, .register-intro { grid-template-columns: 1fr; } }
+  @media (max-width: 38rem) { .register-intro dl { grid-template-columns: 1fr; } }
+</style>

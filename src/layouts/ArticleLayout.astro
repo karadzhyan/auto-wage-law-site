@@ -1,25 +1,38 @@
 ---
 import type { MarkdownHeading } from 'astro';
 import BaseLayout from './BaseLayout.astro';
-import AuthorityCallout from '../components/AuthorityCallout.astro';
+import AnalysisSequence from '../components/AnalysisSequence.astro';
+import AuthorityStack from '../components/AuthorityStack.astro';
+import EvidenceMap from '../components/EvidenceMap.astro';
+import SourceCheck from '../components/SourceCheck.astro';
 import WorkdayTimeline from '../components/WorkdayTimeline.astro';
 import { issues, payPlans } from '../data/library';
+import type { AnalysisStageId } from '../data/analysis';
+import type { AuthorityId } from '../data/authorities';
+import type { EvidenceDomainId } from '../data/evidence';
 import '../styles/article.css';
 
-interface Source { label: string; url: string; }
 interface Props {
   title: string;
   description: string;
   section: 'pay-plans' | 'issues';
-  reviewed: string;
-  confidence: 'reviewed';
-  sources: Source[];
+  question: string;
+  analysisStep: AnalysisStageId;
+  jurisdictions: ('california' | 'federal')[];
+  sourceChecked: string;
+  checkScope: string;
+  nextCheck: string;
+  authorityIds: AuthorityId[];
+  evidenceDomains: EvidenceDomainId[];
   related: string[];
   headings: MarkdownHeading[];
   feature?: 'workday-timeline';
 }
 
-const { title, description, section, reviewed, sources, related, headings, feature } = Astro.props;
+const {
+  title, description, section, question, analysisStep, jurisdictions, sourceChecked, checkScope,
+  nextCheck, authorityIds, evidenceDomains, related, headings, feature,
+} = Astro.props;
 const sectionLabel = section === 'pay-plans' ? 'Pay plans' : 'Issues';
 const toc = headings.filter((heading) => heading.depth === 2);
 const relatedTitles = new Map([...payPlans, ...issues].map((entry) => [entry.href, entry.title]));
@@ -33,34 +46,62 @@ const relatedTitles = new Map([...payPlans, ...issues].map((entry) => [entry.hre
           <a href="/">Home</a><span aria-hidden="true">/</span>
           <a href={`/${section}/`}>{sectionLabel}</a>
         </nav>
-        <p class="eyebrow">{sectionLabel} · {reviewed}</p>
-        <h1>{title}</h1>
-        <p class="lede">{description}</p>
+        <div class="article-hero-grid">
+          <div>
+            <p class="eyebrow">{sectionLabel} · {jurisdictions.join(' + ')}</p>
+            <h1>{title}</h1>
+            <p class="lede">{description}</p>
+          </div>
+          <aside class="question-box">
+            <span>Question presented</span>
+            <p>{question}</p>
+          </aside>
+        </div>
+        <SourceCheck sourceChecked={sourceChecked} nextCheck={nextCheck} checkScope={checkScope} authorityCount={authorityIds.length} />
+        <div class="analysis-strip no-print" aria-label="Current position in the analytical sequence">
+          <p class="data-label">Analysis position</p>
+          <AnalysisSequence current={analysisStep} variant="compact" />
+        </div>
       </div>
     </header>
+
     <div class="shell section article-shell">
+      <aside class="analysis-rail no-print" aria-label="Analytical sequence">
+        <p class="data-label">Analysis position</p>
+        <AnalysisSequence current={analysisStep} variant="vertical" />
+      </aside>
+
       <article class="article-body">
         {feature === 'workday-timeline' && <WorkdayTimeline />}
         <slot />
-        <AuthorityCallout sources={sources} />
+
+        <section class="mobile-context" aria-label="Article evidence and authority">
+          <details class="mobile-context-section">
+            <summary>Evidence boundaries <span>{evidenceDomains.length} domains</span></summary>
+            <div><EvidenceMap ids={evidenceDomains} title="Evidence domains used in this guide" /></div>
+          </details>
+          <details class="mobile-context-section">
+            <summary>Authority boundaries <span>{authorityIds.length} sources</span></summary>
+            <div><AuthorityStack ids={authorityIds} title="Sources used in this guide" /></div>
+          </details>
+        </section>
+
         {related.length > 0 && (
           <aside class="related">
             <p class="data-label">Continue the review</p>
-            <div>
-              {related.map((href) => <a href={href}>{relatedTitles.get(href) ?? 'Related guide'} <span aria-hidden="true">→</span></a>)}
-            </div>
+            <div>{related.map((href) => <a href={href}>{relatedTitles.get(href) ?? 'Related guide'} <span aria-hidden="true">→</span></a>)}</div>
           </aside>
         )}
       </article>
-      <aside class="article-rail no-print" aria-label="On this page">
-        <p class="data-label">On this page</p>
-        {toc.length > 0 ? (
-          <ol>{toc.map((heading) => <li><a href={`#${heading.slug}`}>{heading.text}</a></li>)}</ol>
-        ) : <p>Article overview</p>}
-        <div class="review-stamp">
-          <span>Editorial status</span>
-          <strong>Reviewed</strong>
-          <small>{reviewed}</small>
+
+      <aside class="article-rail" aria-label="On this page and source boundaries">
+        <div class="rail-scroll">
+          <div class="no-print">
+            <p class="data-label">On this page</p>
+            {toc.length > 0 ? <ol class="toc">{toc.map((heading) => <li><a href={`#${heading.slug}`}>{heading.text}</a></li>)}</ol> : <p>Article overview</p>}
+          </div>
+          <div class="rail-evidence"><p class="data-label">Evidence limits</p><EvidenceMap ids={evidenceDomains} compact /></div>
+          <div class="rail-authority"><p class="data-label">Authority limits</p><AuthorityStack ids={authorityIds} compact /></div>
         </div>
       </aside>
     </div>
@@ -68,56 +109,41 @@ const relatedTitles = new Map([...payPlans, ...issues].map((entry) => [entry.hre
 </BaseLayout>
 
 <style>
-  .article-hero {
-    border-bottom: var(--rule);
-    padding-block: clamp(3.5rem, 8vw, 7rem);
-    background: linear-gradient(90deg, var(--color-paper-blue) 0 18%, white 18% 100%);
-  }
-
-  .article-hero h1 { max-width: 58rem; margin-bottom: 1.5rem; }
-
-  .breadcrumbs {
-    display: flex;
-    gap: 0.55rem;
-    margin-bottom: 3rem;
-    color: var(--color-muted);
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-  }
-
+  .article-hero { border-bottom: var(--rule); padding-block: clamp(3rem, 7vw, 6rem) var(--space-7); background: white; }
+  .breadcrumbs { display: flex; gap: 0.55rem; margin-bottom: 2.6rem; color: var(--color-muted); font-family: var(--font-mono); font-size: var(--text-xs); }
   .breadcrumbs a { color: var(--color-cobalt-dark); }
-
-  .article-rail {
-    position: sticky;
-    top: 2rem;
-    border-top: 3px solid var(--color-ink);
-    padding-top: 1rem;
-  }
-
-  .article-rail ol { margin: 0; padding-left: 1.2rem; }
-  .article-rail li + li { margin-top: 0.75rem; }
-  .article-rail li,
-  .article-rail a { font-size: 0.9rem; }
-
-  .review-stamp {
-    display: grid;
-    margin-top: 2rem;
-    border: 1px solid var(--color-positive);
-    padding: 0.9rem;
-    color: var(--color-positive);
-    font-family: var(--font-mono);
-  }
-
-  .review-stamp span,
-  .review-stamp small { font-size: 0.65rem; text-transform: uppercase; }
-  .review-stamp strong { margin-block: 0.1rem; font-family: var(--font-display); font-size: 1.4rem; }
-
+  .article-hero-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(16rem, 0.8fr); gap: var(--space-8); align-items: end; margin-bottom: var(--space-7); }
+  .article-hero h1 { max-width: 58rem; margin-bottom: 1.5rem; font-size: clamp(2.8rem, 7vw, 6.8rem); overflow-wrap: normal; hyphens: none; word-break: normal; }
+  .article-hero-grid > * { min-width: 0; }
+  .question-box { border-top: 4px solid var(--color-cobalt); padding-top: 1rem; }
+  .question-box span { color: var(--color-cobalt-dark); font-family: var(--font-mono); font-size: 0.66rem; font-weight: 600; text-transform: uppercase; }
+  .question-box p { margin: 0.7rem 0 0; color: var(--color-ink); font-size: 1rem; line-height: 1.45; }
+  .analysis-rail,
+  .article-rail { position: sticky; top: 1.25rem; align-self: start; }
+  .analysis-strip { display: none; margin-top: var(--space-6); }
+  .analysis-strip .data-label { margin-bottom: var(--space-3); }
+  .rail-scroll { max-height: calc(100vh - 2.5rem); overflow-y: auto; padding-right: 0.3rem; scrollbar-width: thin; }
+  .toc { margin: 0; padding: 0; border-top: 3px solid var(--color-ink); list-style: none; }
+  .toc li { border-bottom: var(--rule); }
+  .toc a { display: block; padding-block: 0.55rem; color: var(--color-text); font-size: 0.76rem; line-height: 1.3; text-decoration: none; }
+  .toc a:hover { color: var(--color-cobalt-dark); }
+  .rail-evidence,
+  .rail-authority { margin-top: 2rem; }
+  .mobile-context { display: none; margin-top: 4rem; }
+  .mobile-context-section { border-top: 3px solid var(--color-ink); border-bottom: var(--rule); }
+  .mobile-context-section + .mobile-context-section { margin-top: 1rem; }
+  .mobile-context-section > summary { display: flex; min-height: 2.75rem; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 0.7rem; color: var(--color-ink); font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; cursor: pointer; }
+  .mobile-context-section > summary span { color: var(--color-muted); font-family: var(--font-mono); font-size: 0.65rem; font-weight: 500; text-transform: uppercase; }
+  .mobile-context-section > div { padding-block: 1.5rem; }
   .related { margin-top: 4rem; border-top: 3px solid var(--color-ink); padding-top: 1.5rem; }
   .related div { display: grid; }
   .related a { border-bottom: var(--rule); padding-block: 0.8rem; color: var(--color-ink); font-weight: 700; text-transform: capitalize; }
-
+  @media (max-width: 72rem) { .article-shell { grid-template-columns: minmax(0, 1fr) minmax(13rem, 16rem); } .analysis-rail { display: none; } .analysis-strip { display: block; } }
   @media (max-width: 56rem) {
+    .article-hero-grid { grid-template-columns: 1fr; gap: var(--space-5); }
+    .article-hero h1 { font-size: clamp(2.2rem, 11vw, 4.4rem); }
+    .article-shell { grid-template-columns: 1fr; }
     .article-rail { display: none; }
-    .article-hero { background: linear-gradient(180deg, var(--color-paper-blue) 0 0.5rem, white 0.5rem 100%); }
+    .mobile-context { display: grid; gap: var(--space-8); }
   }
 </style>

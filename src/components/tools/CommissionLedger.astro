@@ -1,0 +1,688 @@
+---
+import {
+  analyzeTransactionEvidence,
+  reconcileLedger,
+  seedTransactions,
+  type LedgerStatus,
+} from '../../lib/tools/commission-ledger.ts';
+import { getAuthorities } from '../../data/authorities.ts';
+
+const selectedTransaction = seedTransactions.find(({ status }) => status === 'test-condition') ?? seedTransactions[0];
+const initialResult = reconcileLedger(seedTransactions);
+const initialEvidence = analyzeTransactionEvidence(selectedTransaction);
+
+const currency = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  minimumFractionDigits: 2,
+});
+
+const statusLabels: Record<LedgerStatus, string> = {
+  'trace-complete': 'Trace complete',
+  'test-condition': 'Test condition',
+  'verify-floor': 'Verify floor',
+  'record-missing': 'Record missing',
+};
+
+const componentLabels = {
+  'base-wage': 'Base wage',
+  'commission-credit': 'Commission credit',
+  draw: 'Draw / advance',
+  debit: 'Debit',
+  other: 'Other',
+};
+
+const formatDate = (value: string) => {
+  const [, month = '', day = ''] = value.split('-');
+  return month && day ? `${month}/${day}` : '—';
+};
+---
+
+<div class="commission-ledger" data-commission-ledger>
+  <header class="ledger-toolbar">
+    <div>
+      <strong>Commission transaction ledger</strong>
+      <span>Every starting row is synthetic. Inputs remain in this browser and are never transmitted.</span>
+    </div>
+    <div class="toolbar-actions no-print">
+      <button class="tool-button tool-button--primary" type="button" data-add-transaction>
+        <svg aria-hidden="true" viewBox="0 0 20 20"><path d="M10 3v14M3 10h14" /></svg>
+        Add transaction
+      </button>
+      <button class="tool-button" type="button" data-reset-ledger>Reset synthetic example</button>
+      <button class="tool-button" type="button" data-print-ledger>
+        <svg aria-hidden="true" viewBox="0 0 20 20"><path d="M5.5 7V3.5h9V7M5 14H3.5V8.5h13V14H15M5.5 11.5h9v5h-9z" /></svg>
+        Print ledger
+      </button>
+    </div>
+  </header>
+
+  <section class="context-strip" aria-label="Synthetic ledger context">
+    <label>
+      <span>Role</span>
+      <select data-context-field="role">
+        <option>Vehicle salesperson</option>
+        <option>F&amp;I manager</option>
+        <option>Service advisor</option>
+        <option>Other commissioned role</option>
+      </select>
+    </label>
+    <label>
+      <span>Plan version</span>
+      <input type="text" value="Synthetic 2026-Q2" data-context-field="plan" />
+    </label>
+    <label>
+      <span>Dealer payday</span>
+      <select data-context-field="payday">
+        <option>Last day of month</option>
+        <option>Semimonthly</option>
+        <option>Biweekly</option>
+        <option>Other entered schedule</option>
+      </select>
+    </label>
+    <label>
+      <span>Review period</span>
+      <input type="text" value="June–July 2026" data-context-field="period" />
+    </label>
+  </section>
+
+  <div class="ledger-layout">
+    <section class="ledger-workbench" aria-labelledby="transaction-ledger-heading">
+      <div class="section-bar">
+        <div>
+          <h2 id="transaction-ledger-heading">Transaction ledger</h2>
+          <span data-entry-count>{initialResult.transactionCount} synthetic entries</span>
+        </div>
+        <div class="ledger-filters no-print" role="group" aria-label="Filter transactions">
+          <button type="button" data-ledger-filter="all" aria-pressed="true">All</button>
+          <button type="button" data-ledger-filter="credits" aria-pressed="false">Credits</button>
+          <button type="button" data-ledger-filter="debits" aria-pressed="false">Debits</button>
+          <button type="button" data-ledger-filter="unresolved" aria-pressed="false">Unresolved</button>
+        </div>
+      </div>
+
+      <div class="table-scroll" tabindex="0" aria-label="Scrollable synthetic transaction ledger">
+        <table class="transaction-table">
+          <caption class="sr-only">Synthetic commission transactions. Select a row to inspect or edit it.</caption>
+          <thead>
+            <tr>
+              <th scope="col">Deal / event</th>
+              <th scope="col">Date</th>
+              <th scope="col">Component</th>
+              <th scope="col">Plan event</th>
+              <th scope="col" class="numeric">Original credit</th>
+              <th scope="col" class="numeric">Later debit</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody data-ledger-rows>
+            {seedTransactions.map((transaction) => (
+              <tr class:list={{ selected: transaction.id === selectedTransaction.id }}>
+                <th scope="row">
+                  <button
+                    type="button"
+                    class="row-select"
+                    data-select-transaction={transaction.id}
+                    aria-expanded={transaction.id === selectedTransaction.id ? 'true' : 'false'}
+                    aria-controls="transaction-editor"
+                  >
+                    <svg aria-hidden="true" viewBox="0 0 16 16"><path d="m5 3 5 5-5 5" /></svg>
+                    <span>{transaction.eventLabel}</span>
+                  </button>
+                </th>
+                <td>{formatDate(transaction.eventDate)}</td>
+                <td>{componentLabels[transaction.component]}</td>
+                <td>{transaction.planEvent || '—'}</td>
+                <td class="numeric">{transaction.credit ? currency.format(transaction.credit) : '—'}</td>
+                <td class:list={{ numeric: true, debit: transaction.debit > 0 }}>
+                  {transaction.debit ? `−${currency.format(transaction.debit)}` : '—'}
+                </td>
+                <td><span class={`status status--${transaction.status}`}>{statusLabels[transaction.status]}</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <p class="filter-empty" data-filter-empty hidden>No synthetic transactions match this filter.</p>
+
+      <form id="transaction-editor" class="transaction-editor" data-transaction-editor>
+        <div class="editor-head">
+          <div>
+            <span>Edit selected synthetic transaction</span>
+            <strong data-editor-title>{selectedTransaction.eventLabel}</strong>
+          </div>
+          <button class="collapse-button no-print" type="button" data-collapse-editor aria-expanded="true">
+            Collapse
+            <svg aria-hidden="true" viewBox="0 0 16 16"><path d="m3 10 5-5 5 5" /></svg>
+          </button>
+        </div>
+
+        <div class="editor-fields" data-editor-fields>
+          <label class="field-wide field-event">
+            <span>Deal / event</span>
+            <input name="eventLabel" type="text" value={selectedTransaction.eventLabel} required />
+          </label>
+          <label class="field-date">
+            <span>Event date</span>
+            <input name="eventDate" type="date" value={selectedTransaction.eventDate} />
+          </label>
+          <label class="field-component">
+            <span>Component</span>
+            <select name="component">
+              <option value="base-wage" selected={selectedTransaction.component === 'base-wage'}>Base wage</option>
+              <option value="commission-credit" selected={selectedTransaction.component === 'commission-credit'}>Commission credit</option>
+              <option value="draw" selected={selectedTransaction.component === 'draw'}>Draw / advance</option>
+              <option value="debit" selected={selectedTransaction.component === 'debit'}>Debit</option>
+              <option value="other" selected={selectedTransaction.component === 'other'}>Other</option>
+            </select>
+          </label>
+          <label class="field-wide field-plan">
+            <span>Plan event</span>
+            <input name="planEvent" type="text" value={selectedTransaction.planEvent} />
+          </label>
+          <label class="field-credit">
+            <span>Original credit</span>
+            <span class="money-field"><b>$</b><input name="credit" type="number" min="0" step="0.01" value={selectedTransaction.credit} inputmode="decimal" /></span>
+          </label>
+          <label class="field-debit">
+            <span>Later debit</span>
+            <span class="money-field"><b>$</b><input name="debit" type="number" min="0" step="0.01" value={selectedTransaction.debit} inputmode="decimal" /></span>
+          </label>
+          <label class="field-status">
+            <span>Trace status</span>
+            <select name="status">
+              <option value="trace-complete" selected={selectedTransaction.status === 'trace-complete'}>Trace complete</option>
+              <option value="test-condition" selected={selectedTransaction.status === 'test-condition'}>Test condition</option>
+              <option value="verify-floor" selected={selectedTransaction.status === 'verify-floor'}>Verify floor</option>
+              <option value="record-missing" selected={selectedTransaction.status === 'record-missing'}>Record missing</option>
+            </select>
+          </label>
+          <label class="field-wide field-condition">
+            <span>Written earning condition</span>
+            <textarea name="conditionText" rows="3">{selectedTransaction.conditionText}</textarea>
+          </label>
+          <label class="field-wide field-evidence">
+            <span>Evidence of condition</span>
+            <textarea name="conditionEvidence" rows="3">{selectedTransaction.conditionEvidence}</textarea>
+          </label>
+          <label class="field-wide field-original-line">
+            <span>Original statement line</span>
+            <input name="originalStatementLine" type="text" value={selectedTransaction.originalStatementLine} />
+          </label>
+          <label class="field-wide field-debit-line">
+            <span>Debit statement line</span>
+            <input name="debitStatementLine" type="text" value={selectedTransaction.debitStatementLine} />
+          </label>
+          <label class="field-reason">
+            <span>Reason code</span>
+            <input name="reasonCode" type="text" value={selectedTransaction.reasonCode} />
+          </label>
+          <label class="field-wide field-acknowledgment">
+            <span>Plan receipt / acknowledgment</span>
+            <input name="acknowledgment" type="text" value={selectedTransaction.acknowledgment} />
+          </label>
+        </div>
+      </form>
+
+      <section class="reconciliation" aria-labelledby="reconciliation-heading">
+        <div class="reconciliation-head">
+          <h2 id="reconciliation-heading">Period reconciliation</h2>
+          <span data-unresolved-count>{initialResult.unresolvedIds.length} entries need a record or condition test</span>
+        </div>
+        <dl class="totals-grid">
+          <div><dt>Base wages</dt><dd data-total="baseWages">{currency.format(initialResult.totals.baseWages)}</dd></div>
+          <div><dt>Commission credits</dt><dd data-total="commissionCredits">{currency.format(initialResult.totals.commissionCredits)}</dd></div>
+          <div><dt>Draws / advances</dt><dd data-total="draws">{currency.format(initialResult.totals.draws)}</dd></div>
+          <div><dt>Other credits</dt><dd data-total="otherCredits">{currency.format(initialResult.totals.otherCredits)}</dd></div>
+          <div><dt>Debits</dt><dd class="total-debit" data-total="debits">−{currency.format(initialResult.totals.debits)}</dd></div>
+          <div class="net-total"><dt>Net before taxes</dt><dd data-total="netBeforeTaxes">{currency.format(initialResult.totals.netBeforeTaxes)}</dd></div>
+        </dl>
+        <p data-reconciliation-scope>{initialResult.scope}</p>
+      </section>
+    </section>
+
+    <aside class="evidence-trace" aria-labelledby="evidence-trace-heading">
+      <div class="evidence-head">
+        <div>
+          <h2 id="evidence-trace-heading">Transaction evidence trace</h2>
+          <p class="evidence-index">Classification · Earning event · Payment timing · Debit / chargeback basis</p>
+        </div>
+        <p>Selected row: <strong data-evidence-transaction>{selectedTransaction.eventLabel}</strong></p>
+      </div>
+      <div data-evidence-questions>
+        {initialEvidence.map((item, index) => (
+          <details class={`evidence-question evidence-question--${item.status}`} open>
+            <summary>
+              <span>{index + 1}</span>
+              <strong>{item.title}</strong>
+              <svg aria-hidden="true" viewBox="0 0 16 16"><path d="m3 6 5 5 5-5" /></svg>
+            </summary>
+            <div class="question-body">
+              <p class="question-text">{item.question}</p>
+              <p class="distinction">{item.distinction}</p>
+              <dl class="proof-grid">
+                <div>
+                  <dt>Proof present</dt>
+                  <dd>
+                    {item.proofPresent.length > 0
+                      ? <ul>{item.proofPresent.map((proof) => <li>{proof}</li>)}</ul>
+                      : <span>None entered</span>}
+                  </dd>
+                </div>
+                <div>
+                  <dt>Proof missing</dt>
+                  <dd>
+                    {item.proofMissing.length > 0
+                      ? <ul>{item.proofMissing.map((proof) => <li>{proof}</li>)}</ul>
+                      : <span>No gap identified by the entered fields</span>}
+                  </dd>
+                </div>
+                <div>
+                  <dt>Authority</dt>
+                  <dd class="authority-links">
+                    {getAuthorities(item.authorityIds).map((authority) => (
+                      <a href={authority.url} target="_blank" rel="noreferrer">{authority.shortLabel}</a>
+                    ))}
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </details>
+        ))}
+      </div>
+    </aside>
+  </div>
+
+  <footer class="record-pull">
+    <strong>Record pull</strong>
+    <span>signed plan</span><i aria-hidden="true">·</i>
+    <span>deal jacket</span><i aria-hidden="true">·</i>
+    <span>funding / cancellation proof</span><i aria-hidden="true">·</i>
+    <span>payroll register</span><i aria-hidden="true">·</i>
+    <span>wage statements</span><i aria-hidden="true">·</i>
+    <span>draw reconciliation</span>
+  </footer>
+
+  <p class="local-status sr-only" data-ledger-status role="status" aria-live="polite"></p>
+</div>
+
+<script>
+  import { initializeCommissionLedger } from '../../scripts/commission-ledger.ts';
+  initializeCommissionLedger();
+</script>
+
+<style is:global>
+  .commission-ledger {
+    --ledger-rule: #aebfd4;
+    border: 1px solid var(--color-ink);
+    background: #fff;
+    color: var(--color-ink);
+  }
+
+  .ledger-toolbar,
+  .section-bar,
+  .editor-head,
+  .reconciliation-head,
+  .evidence-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .ledger-toolbar {
+    min-height: 4.25rem;
+    border-bottom: 1px solid var(--ledger-rule);
+    padding: 0.65rem 0.75rem 0.65rem 1rem;
+  }
+
+  .ledger-toolbar > div:first-child {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .ledger-toolbar strong,
+  .section-bar h2,
+  .editor-head strong,
+  .reconciliation h2,
+  .evidence-head h2,
+  .record-pull strong {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'wdth' 82;
+    letter-spacing: -0.025em;
+  }
+
+  .ledger-toolbar strong { font-size: 1.2rem; }
+
+  .ledger-toolbar span,
+  .section-bar span,
+  .editor-head span,
+  .reconciliation-head span,
+  .evidence-head p {
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: 0.67rem;
+    line-height: 1.4;
+  }
+
+  .toolbar-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.45rem; }
+
+  .tool-button,
+  .collapse-button {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    border: 1px solid var(--color-cobalt);
+    padding: 0.45rem 0.7rem;
+    background: #fff;
+    color: var(--color-cobalt-dark);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .tool-button:hover { background: var(--color-paper-blue); }
+  .tool-button--primary { background: var(--color-cobalt); color: #fff; }
+  .tool-button--primary:hover { background: var(--color-cobalt-dark); }
+  .tool-button svg { width: 1rem; fill: none; stroke: currentColor; stroke-linecap: square; stroke-linejoin: miter; stroke-width: 1.5; }
+
+  .context-strip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-bottom: 1px solid var(--color-ink);
+  }
+
+  .context-strip label {
+    min-width: 0;
+    border-right: 1px solid var(--ledger-rule);
+    padding: 0.65rem 0.85rem;
+  }
+
+  .context-strip label:last-child { border-right: 0; }
+
+  .context-strip label > span,
+  .editor-fields label > span:first-child {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+  }
+
+  .context-strip input,
+  .context-strip select {
+    width: 100%;
+    min-height: 2.75rem;
+    border: 1px solid var(--ledger-rule);
+    padding: 0.35rem 0.5rem;
+    background: #fff;
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 0.84rem;
+  }
+
+  .ledger-layout { display: grid; grid-template-columns: minmax(0, 1.82fr) minmax(19rem, 1fr); }
+  .ledger-workbench { min-width: 0; border-right: 1px solid var(--color-ink); }
+
+  .section-bar {
+    min-height: 3.6rem;
+    border-bottom: 1px solid var(--color-ink);
+    padding: 0.55rem 0.7rem 0.55rem 1rem;
+  }
+
+  .section-bar > div:first-child { display: flex; align-items: baseline; gap: 0.55rem; }
+  .section-bar h2,
+  .reconciliation h2,
+  .evidence-head h2 { font-size: 1.16rem; line-height: 1.1; }
+
+  .ledger-filters { display: flex; }
+  .ledger-filters button {
+    min-width: 4.5rem;
+    min-height: 2.75rem;
+    border: 1px solid var(--ledger-rule);
+    border-right: 0;
+    padding: 0.3rem 0.55rem;
+    background: #fff;
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    cursor: pointer;
+  }
+
+  .ledger-filters button:last-child { border-right: 1px solid var(--ledger-rule); }
+  .ledger-filters button[aria-pressed='true'] { border-color: var(--color-cobalt); background: var(--color-cobalt); color: #fff; }
+
+  .table-scroll { max-width: 100%; overflow-x: auto; outline-offset: -3px; }
+  .transaction-table { width: 100%; min-width: 58rem; border-collapse: collapse; table-layout: fixed; }
+  .transaction-table th,
+  .transaction-table td { border-right: 1px solid var(--ledger-rule); border-bottom: 1px solid var(--ledger-rule); padding: 0.58rem 0.65rem; vertical-align: middle; }
+  .transaction-table th:last-child,
+  .transaction-table td:last-child { border-right: 0; }
+  .transaction-table thead th {
+    background: var(--color-paper-blue);
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: 0.61rem;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  .transaction-table thead th:nth-child(1) { width: 18%; }
+  .transaction-table thead th:nth-child(2) { width: 8%; }
+  .transaction-table thead th:nth-child(3) { width: 15%; }
+  .transaction-table thead th:nth-child(4) { width: 20%; }
+  .transaction-table thead th:nth-child(5),
+  .transaction-table thead th:nth-child(6) { width: 11%; }
+  .transaction-table thead th:nth-child(7) { width: 17%; }
+
+  .transaction-table tbody th,
+  .transaction-table tbody td { background: #fff; font-size: 0.75rem; font-weight: 400; line-height: 1.35; }
+  .transaction-table tbody tr.selected > * { border-bottom-color: var(--color-cobalt); border-top: 1px solid var(--color-cobalt); background: #f2f7ff; }
+  .transaction-table tbody tr.selected > :first-child { box-shadow: inset 4px 0 0 var(--color-cobalt); }
+  .transaction-table .numeric { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+  .transaction-table .debit { color: var(--color-signal-text); }
+
+  .row-select {
+    display: grid;
+    width: 100%;
+    min-height: 2.75rem;
+    grid-template-columns: 0.75rem minmax(0, 1fr);
+    gap: 0.25rem;
+    align-items: center;
+    border: 0;
+    padding: 0.4rem 0;
+    background: transparent;
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 0.76rem;
+    font-weight: 650;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .row-select svg { width: 0.7rem; fill: none; stroke: var(--color-cobalt); stroke-linecap: square; stroke-linejoin: miter; stroke-width: 1.5; transition: transform var(--transition); }
+  .row-select[aria-expanded='true'] svg { transform: rotate(90deg); }
+  .status { color: var(--color-cobalt-dark); font-family: var(--font-mono); font-size: 0.62rem; }
+  .status--record-missing { color: var(--color-signal-text); }
+  .status--trace-complete { color: var(--color-positive); }
+  .filter-empty { margin: 0; border-bottom: 1px solid var(--ledger-rule); padding: 1rem; color: var(--color-muted); font-size: 0.85rem; }
+
+  .transaction-editor { border-bottom: 1px solid var(--color-ink); background: var(--color-paper-blue); }
+  .transaction-editor[hidden] { display: none; }
+  .editor-head { min-height: 3.2rem; border-bottom: 1px solid var(--ledger-rule); padding: 0.55rem 0.7rem 0.55rem 1rem; }
+  .editor-head > div { display: grid; gap: 0.1rem; }
+  .editor-head strong { font-size: 1rem; }
+  .collapse-button { border-color: transparent; padding-inline: 0.5rem; background: transparent; }
+  .collapse-button svg { width: 0.8rem; fill: none; stroke: currentColor; stroke-width: 1.5; transition: transform var(--transition); }
+  .collapse-button[aria-expanded='false'] svg { transform: rotate(180deg); }
+  .editor-fields {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-areas:
+      'event event date component'
+      'plan plan credit debit'
+      'condition condition evidence evidence'
+      'original original debitline reason'
+      'ack ack status status';
+  }
+  .editor-fields[hidden] { display: none; }
+  .editor-fields label { min-width: 0; border-right: 1px solid var(--ledger-rule); border-bottom: 1px solid var(--ledger-rule); padding: 0.65rem 0.75rem; }
+  .editor-fields .field-event { grid-area: event; }
+  .editor-fields .field-date { grid-area: date; }
+  .editor-fields .field-component { grid-area: component; border-right: 0; }
+  .editor-fields .field-plan { grid-area: plan; }
+  .editor-fields .field-credit { grid-area: credit; }
+  .editor-fields .field-debit { grid-area: debit; border-right: 0; }
+  .editor-fields .field-status { grid-area: status; border-right: 0; }
+  .editor-fields .field-condition { grid-area: condition; }
+  .editor-fields .field-evidence { grid-area: evidence; border-right: 0; }
+  .editor-fields .field-original-line { grid-area: original; }
+  .editor-fields .field-debit-line { grid-area: debitline; }
+  .editor-fields .field-reason { grid-area: reason; border-right: 0; }
+  .editor-fields .field-acknowledgment { grid-area: ack; }
+  .editor-fields input,
+  .editor-fields select,
+  .editor-fields textarea {
+    width: 100%;
+    min-height: 2.75rem;
+    resize: vertical;
+    border: 1px solid var(--ledger-rule);
+    padding: 0.4rem 0.5rem;
+    background: #fff;
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    line-height: 1.35;
+  }
+
+  .editor-fields textarea { min-height: 4.75rem; }
+  .money-field { position: relative; display: block; }
+  .money-field b { position: absolute; z-index: 1; top: 0.46rem; left: 0.5rem; color: var(--color-muted); font-family: var(--font-mono); font-size: 0.72rem; }
+  .money-field input { padding-left: 1.2rem; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+  .reconciliation { padding: 0.85rem 0.7rem 0.75rem; }
+  .reconciliation-head { align-items: baseline; margin-bottom: 0.55rem; }
+  .totals-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); margin: 0; border-top: 1px solid var(--ledger-rule); border-left: 1px solid var(--ledger-rule); }
+  .totals-grid > div { min-width: 0; border-right: 1px solid var(--ledger-rule); border-bottom: 1px solid var(--ledger-rule); }
+  .totals-grid dt { min-height: 2.3rem; border-bottom: 1px solid var(--ledger-rule); padding: 0.4rem; color: var(--color-muted); font-family: var(--font-mono); font-size: 0.56rem; line-height: 1.25; text-align: center; text-transform: uppercase; }
+  .totals-grid dd { margin: 0; padding: 0.62rem 0.35rem; font-family: var(--font-mono); font-size: 0.76rem; font-variant-numeric: tabular-nums; font-weight: 500; text-align: center; }
+  .totals-grid .total-debit { color: var(--color-signal-text); }
+  .totals-grid .net-total { background: var(--color-paper-blue); }
+  .totals-grid .net-total dd { color: var(--color-cobalt-dark); font-weight: 700; }
+  .reconciliation > p { margin: 0.7rem 0 0; color: var(--color-muted); font-size: 0.72rem; line-height: 1.4; }
+
+  .evidence-trace { min-width: 0; padding: 0.65rem; background: #fff; }
+  .evidence-head { align-items: baseline; min-height: 2.95rem; padding: 0.1rem 0.2rem 0.65rem; }
+  .evidence-head p { margin: 0; text-align: right; }
+  .evidence-head .evidence-index { margin-top: 0.25rem; text-align: left; }
+  .evidence-head p strong { color: var(--color-ink); }
+  .evidence-question { border: 1px solid var(--ledger-rule); background: #fff; }
+  .evidence-question + .evidence-question { margin-top: 0.45rem; }
+  .evidence-question > summary { display: grid; min-height: 3.6rem; grid-template-columns: 1.25rem minmax(0, 1fr) 1rem; gap: 0.35rem; align-items: center; padding: 0.55rem 0.65rem; cursor: pointer; list-style: none; }
+  .evidence-question > summary::-webkit-details-marker { display: none; }
+  .evidence-question > summary span { color: var(--color-cobalt); font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; }
+  .evidence-question > summary strong { font-family: var(--font-display); font-size: 1rem; font-variation-settings: 'wdth' 83; letter-spacing: -0.02em; }
+  .evidence-question > summary svg { width: 0.85rem; fill: none; stroke: var(--color-ink); stroke-linecap: square; stroke-linejoin: miter; stroke-width: 1.5; transition: transform var(--transition); }
+  .evidence-question[open] > summary svg { transform: rotate(180deg); }
+  .evidence-question--record-missing > summary { box-shadow: inset 3px 0 0 var(--color-signal); }
+  .question-body { border-top: 1px solid var(--ledger-rule); }
+  .question-text,
+  .distinction { margin: 0; padding: 0.65rem 0.7rem; font-size: 0.78rem; line-height: 1.4; }
+  .question-text { font-weight: 650; }
+  .distinction { border-top: 1px solid var(--ledger-rule); color: var(--color-muted); font-style: italic; }
+  .proof-grid { margin: 0; }
+  .proof-grid > div { display: grid; grid-template-columns: minmax(6.4rem, 0.72fr) minmax(0, 2fr); border-top: 1px solid var(--ledger-rule); }
+  .proof-grid dt { padding: 0.55rem 0.65rem; color: var(--color-muted); font-family: var(--font-mono); font-size: 0.61rem; text-transform: uppercase; }
+  .proof-grid dd { min-width: 0; margin: 0; border-left: 1px solid var(--ledger-rule); padding: 0.55rem 0.65rem; font-size: 0.72rem; line-height: 1.35; }
+  .proof-grid ul { margin: 0; padding-left: 1rem; }
+  .proof-grid li { font-size: 0.72rem; }
+  .proof-grid li + li { margin-top: 0.25rem; }
+  .proof-grid span { color: var(--color-muted); }
+  .authority-links { display: flex; flex-wrap: wrap; gap: 0.3rem 0.65rem; }
+  .authority-links a { color: var(--color-cobalt-dark); font-family: var(--font-mono); font-size: 0.65rem; font-weight: 500; }
+
+  .record-pull { display: flex; min-height: 3.4rem; flex-wrap: wrap; align-items: center; gap: 0.35rem 1rem; border-top: 1px solid var(--color-ink); padding: 0.7rem 1rem; }
+  .record-pull strong { margin-right: 0.5rem; font-size: 1.05rem; }
+  .record-pull span,
+  .record-pull i { color: var(--color-muted); font-family: var(--font-mono); font-size: 0.64rem; font-style: normal; }
+
+  @media (max-width: 68rem) {
+    .ledger-toolbar { align-items: flex-start; flex-direction: column; }
+    .toolbar-actions { width: 100%; justify-content: flex-start; }
+    .ledger-layout { grid-template-columns: 1fr; }
+    .ledger-workbench { border-right: 0; }
+    .evidence-trace { border-top: 1px solid var(--color-ink); }
+  }
+
+  @media (max-width: 48rem) {
+    .context-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .context-strip label:nth-child(2) { border-right: 0; }
+    .context-strip label:nth-child(-n + 2) { border-bottom: 1px solid var(--ledger-rule); }
+    .section-bar { align-items: stretch; flex-direction: column; }
+    .ledger-filters { width: 100%; }
+    .ledger-filters button { min-width: 0; flex: 1; }
+    .editor-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-areas: none; }
+    .editor-fields label,
+    .editor-fields label[class] { grid-area: auto; border-right: 1px solid var(--ledger-rule); }
+    .editor-fields label:nth-child(2n) { border-right: 0; }
+    .editor-fields .field-wide { grid-column: span 2; }
+    .totals-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .reconciliation-head { align-items: flex-start; flex-direction: column; }
+  }
+
+  @media (max-width: 30rem) {
+    .ledger-toolbar { padding: 0.75rem; }
+    .toolbar-actions { display: grid; grid-template-columns: 1fr 1fr; }
+    .tool-button { width: 100%; }
+    .tool-button--primary { grid-column: 1 / -1; }
+    .context-strip { grid-template-columns: 1fr; }
+    .context-strip label,
+    .context-strip label:nth-child(2) { border-right: 0; border-bottom: 1px solid var(--ledger-rule); }
+    .context-strip label:last-child { border-bottom: 0; }
+    .editor-head { align-items: flex-start; }
+    .editor-fields { grid-template-columns: 1fr; }
+    .editor-fields label,
+    .editor-fields .field-wide,
+    .editor-fields label:nth-child(2n),
+    .editor-fields label:nth-child(3n) { grid-column: auto; border-right: 0; }
+    .totals-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .evidence-head { align-items: flex-start; flex-direction: column; }
+    .evidence-head p { text-align: left; }
+    .proof-grid > div { grid-template-columns: 1fr; }
+    .proof-grid dd { border-top: 1px solid var(--ledger-rule); border-left: 0; }
+    .record-pull { gap: 0.35rem 0.65rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .row-select svg,
+    .collapse-button svg,
+    .evidence-question > summary svg { transition: none; }
+  }
+
+  @media print {
+    .commission-ledger { border: 0; }
+    .no-print,
+    .context-strip,
+    .transaction-editor { display: none !important; }
+    .ledger-layout { display: block; }
+    .ledger-workbench { border: 0; }
+    .table-scroll { overflow: visible; }
+    .transaction-table { min-width: 0; font-size: 8pt; }
+    .transaction-table th,
+    .transaction-table td { padding: 4pt; }
+    .evidence-trace { break-before: page; border: 0; padding: 0; }
+    .evidence-question { break-inside: avoid; }
+    .evidence-question > .question-body { display: block !important; }
+    .record-pull { break-inside: avoid; }
+  }
+</style>

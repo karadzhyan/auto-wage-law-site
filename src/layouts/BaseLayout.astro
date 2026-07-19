@@ -14,6 +14,7 @@ interface Props {
   canonicalPath?: string;
   image?: string;
   noindex?: boolean;
+  lang?: 'en' | 'es';
 }
 
 const {
@@ -22,15 +23,17 @@ const {
   canonicalPath = Astro.url.pathname,
   image = '/social-card.svg',
   noindex = false,
+  lang = 'en',
 } = Astro.props;
 const siteName = 'Auto Wage Law';
 const pageTitle = title === siteName ? title : `${title} — ${siteName}`;
 const canonical = new URL(canonicalPath, Astro.site ?? Astro.url.origin);
 const socialImage = new URL(image, Astro.site ?? Astro.url.origin);
+const skipLabel = lang === 'es' ? 'Saltar al contenido principal' : 'Skip to main content';
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -54,9 +57,9 @@ const socialImage = new URL(image, Astro.site ?? Astro.url.origin);
     <slot name="head" />
   </head>
   <body>
-    <a class="skip-link" href="#main-content">Skip to main content</a>
-    <SiteHeader />
+    <a class="skip-link" href="#main-content">{skipLabel}</a>
+    <SiteHeader lang={lang} />
     <slot />
-    <SiteFooter />
+    <SiteFooter lang={lang} />
   </body>
 </html>

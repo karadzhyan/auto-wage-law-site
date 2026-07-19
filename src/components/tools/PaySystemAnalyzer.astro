@@ -1,0 +1,1216 @@
+---
+import { getAuthorities } from '../../data/authorities.ts';
+import {
+  analyzePaySystem,
+  type AnalyzerFinding,
+  type AnalyzerInput,
+} from '../../lib/tools/pay-system-analyzer.ts';
+
+const exampleInput: AnalyzerInput = {
+  jurisdiction: 'california-federal',
+  establishment: 'dealer-connected',
+  role: 'technician',
+  primaryPayMethod: 'piece-rate',
+  secondaryPayMethod: 'none',
+  workedHours: 46,
+  accountedHours: 38,
+  pieceWorkOccurred: true,
+  restCompensation: 'not-shown',
+  nonproductiveCompensation: 'unknown',
+  signedCommissionPlan: 'not-applicable',
+  formulaAvailable: true,
+  timeRecordComplete: false,
+  productionRecordAvailable: true,
+  establishmentRecordsAvailable: true,
+  dutiesEvidenceAvailable: false,
+  representativePeriodAvailable: false,
+  weeklyRateCalculationAvailable: false,
+  salaryBasisRecordsAvailable: false,
+  claimedOvertimeRoute: '13b10',
+};
+
+const exampleResult = analyzePaySystem(exampleInput);
+
+const statusLabels: Record<AnalyzerFinding['status'], string> = {
+  reconcile: 'Reconcile',
+  predicate: 'Predicate',
+  verify: 'Verify',
+  'separate-test': 'Separate test',
+  'supported-by-inputs': 'Inputs align',
+};
+
+const factFindings = exampleResult.findings.filter((finding) =>
+  ['facts', 'classification', 'measurement'].includes(finding.dimension),
+);
+const predicateFindings = exampleResult.findings.filter((finding) =>
+  finding.dimension === 'coverage' || finding.status === 'predicate' || finding.status === 'separate-test',
+);
+---
+
+<div class="analyzer" data-pay-system-analyzer>
+  <section class="worksheet" aria-labelledby="worksheet-title">
+    <div class="panel-head">
+      <div>
+        <p class="data-label">Record worksheet · six-stage method</p>
+        <h2 id="worksheet-title">Enter what the records show.</h2>
+      </div>
+      <span>Example period loaded</span>
+    </div>
+
+    <ol class="sequence" aria-label="Analysis sequence">
+      {['Facts', 'Classify', 'Measure', 'Test', 'Verify', 'Act'].map((label, index) => (
+        <li><span>{index + 1}</span>{label}</li>
+      ))}
+    </ol>
+
+    <form data-analyzer-form novalidate>
+      <fieldset>
+        <legend><span>01</span> Facts</legend>
+        <p class="fieldset-note">Fix the entity, worksite, role, and period before applying a pay rule.</p>
+
+        <div class="form-row">
+          <label for="analyzer-jurisdiction">
+            Review scope
+            <small>The analyzer keeps California and federal routes separate.</small>
+          </label>
+          <select id="analyzer-jurisdiction" name="jurisdiction" required>
+            <option value="california-federal">California + federal</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="analyzer-establishment">
+            Establishment context
+            <small>Use the employing entity and actual business, not the logo alone.</small>
+          </label>
+          <select id="analyzer-establishment" name="establishment" required>
+            <option value="dealer-connected" selected>Dealer-connected operation</option>
+            <option value="standalone-repair">Standalone repair operation</option>
+            <option value="other">Other establishment</option>
+            <option value="unknown">Not yet established</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="analyzer-role">
+            Dealership role
+            <small>Choose the closest actual work pattern; titles do not decide coverage.</small>
+          </label>
+          <select id="analyzer-role" name="role" required>
+            <option value="technician" selected>Technician</option>
+            <option value="sales">Sales</option>
+            <option value="advisor">Service advisor</option>
+            <option value="finance">Finance / F&amp;I</option>
+            <option value="parts">Parts</option>
+            <option value="support">Support / administration</option>
+          </select>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><span>02</span> Classify</legend>
+        <p class="fieldset-note">Name each pay component by how it operates during the selected period.</p>
+
+        <div class="form-row">
+          <label for="analyzer-primary-method">Primary pay method</label>
+          <select id="analyzer-primary-method" name="primaryPayMethod" required data-primary-method>
+            <option value="piece-rate" selected>Piece rate / flat rate</option>
+            <option value="commission">Commission</option>
+            <option value="mixed">Mixed or uncategorized components</option>
+            <option value="hourly">Hourly</option>
+            <option value="salary">Salary</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="analyzer-secondary-method">
+            Secondary pay method
+            <small>Select a second component only if one appears in the same period.</small>
+          </label>
+          <select id="analyzer-secondary-method" name="secondaryPayMethod" required data-secondary-method>
+            <option value="none" selected>None identified</option>
+            <option value="hourly">Hourly component</option>
+            <option value="piece-rate">Piece-rate component</option>
+            <option value="commission">Commission component</option>
+            <option value="bonus">Bonus component</option>
+          </select>
+        </div>
+
+        <div class="form-row" data-when-piece>
+          <label for="analyzer-piece-work">
+            Piece-paid work occurred
+            <small>This should agree with at least one selected pay method.</small>
+          </label>
+          <select id="analyzer-piece-work" name="pieceWorkOccurred" required>
+            <option value="yes" selected>Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><span>03</span> Measure</legend>
+        <p class="fieldset-note">Compare like periods. The difference is a reconciliation input, not a legal conclusion.</p>
+
+        <div class="form-row hours-row">
+          <label for="analyzer-worked-hours">
+            Actual hours worked
+            <small>Total identified work time in the selected workweek.</small>
+          </label>
+          <div class="number-input">
+            <input id="analyzer-worked-hours" name="workedHours" type="number" min="0" max="168" step="0.01" value="46" inputmode="decimal" required />
+            <span>hours</span>
+          </div>
+        </div>
+
+        <div class="form-row hours-row">
+          <label for="analyzer-accounted-hours">
+            Hours reflected as paid or separately compensated
+            <small>Total hours the matched payroll and pay-detail records account for.</small>
+          </label>
+          <div class="number-input">
+            <input id="analyzer-accounted-hours" name="accountedHours" type="number" min="0" max="168" step="0.01" value="38" inputmode="decimal" required />
+            <span>hours</span>
+          </div>
+        </div>
+
+        <div class="form-row" data-when-rest-method>
+          <label for="analyzer-rest-compensation">
+            Rest / recovery compensation
+            <small>What the matched pay detail shows for this pay method.</small>
+          </label>
+          <select id="analyzer-rest-compensation" name="restCompensation" required>
+            <option value="shown">Shown</option>
+            <option value="not-shown" selected>Not shown</option>
+            <option value="unknown">Cannot tell from current records</option>
+            <option value="not-applicable">Not applicable to the selected method</option>
+          </select>
+        </div>
+
+        <div class="form-row" data-when-piece>
+          <label for="analyzer-npt-compensation">
+            Other nonproductive-time compensation
+            <small>Record only what is separately shown or supported by the selected method.</small>
+          </label>
+          <select id="analyzer-npt-compensation" name="nonproductiveCompensation" required>
+            <option value="shown">Shown</option>
+            <option value="not-shown">Not shown</option>
+            <option value="unknown" selected>Cannot tell from current records</option>
+            <option value="not-applicable">Not applicable to the selected method</option>
+          </select>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><span>04</span> Test</legend>
+        <p class="fieldset-note">Select the route actually claimed or under review. Each route retains its own predicates.</p>
+
+        <div class="form-row">
+          <label for="analyzer-overtime-route">Claimed federal overtime route</label>
+          <select id="analyzer-overtime-route" name="claimedOvertimeRoute" required data-overtime-route>
+            <option value="13b10" selected>FLSA § 13(b)(10) dealership route</option>
+            <option value="7i">FLSA § 7(i) retail commission route</option>
+            <option value="eap">Federal executive / administrative / professional route</option>
+            <option value="none">No federal overtime route claimed</option>
+            <option value="unknown">Route not yet identified</option>
+          </select>
+        </div>
+      </fieldset>
+
+      <fieldset class="evidence-fieldset">
+        <legend><span>05</span> Verify</legend>
+        <p class="fieldset-note">Mark only records aligned to the same entity, worker, and dates.</p>
+
+        <details class="evidence-disclosure" open>
+          <summary>
+            <span>Evidence packet</span>
+            <small>Complete the fields that bear on the selected pay and coverage routes.</small>
+          </summary>
+
+          <div class="evidence-fields">
+            <div class="form-row" data-when-commission>
+              <label for="analyzer-commission-plan">Signed commission plan</label>
+              <select id="analyzer-commission-plan" name="signedCommissionPlan" required>
+                <option value="yes">Available</option>
+                <option value="no">Not available</option>
+                <option value="unknown">Unknown</option>
+                <option value="not-applicable" selected>Not applicable</option>
+              </select>
+            </div>
+
+            <div class="form-row" data-when-piece>
+              <label for="analyzer-formula">Current pay formula available</label>
+              <select id="analyzer-formula" name="formulaAvailable" required>
+                <option value="yes" selected>Yes</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label for="analyzer-time-record">Time record complete</label>
+              <select id="analyzer-time-record" name="timeRecordComplete" required>
+                <option value="yes">Yes</option>
+                <option value="no" selected>No</option>
+              </select>
+            </div>
+
+            <div class="form-row" data-when-piece>
+              <label for="analyzer-production-record">Production / flag record available</label>
+              <select id="analyzer-production-record" name="productionRecordAvailable" required>
+                <option value="yes" selected>Yes</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+
+            <div class="form-row" data-when-route="13b10 7i">
+              <label for="analyzer-establishment-records">Establishment records available</label>
+              <select id="analyzer-establishment-records" name="establishmentRecordsAvailable" required>
+                <option value="yes" selected>Yes</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+
+            <div class="form-row" data-when-route="13b10 eap">
+              <label for="analyzer-duties-evidence">Actual-duty evidence available</label>
+              <select id="analyzer-duties-evidence" name="dutiesEvidenceAvailable" required>
+                <option value="yes">Yes</option>
+                <option value="no" selected>No</option>
+              </select>
+            </div>
+
+            <div class="form-row" data-when-route="7i">
+              <label for="analyzer-representative-period">Representative-period records available</label>
+              <select id="analyzer-representative-period" name="representativePeriodAvailable" required>
+                <option value="yes">Yes</option>
+                <option value="no" selected>No</option>
+              </select>
+            </div>
+
+            <div class="form-row" data-when-route="7i">
+              <label for="analyzer-weekly-rate">Weekly regular-rate calculation available</label>
+              <select id="analyzer-weekly-rate" name="weeklyRateCalculationAvailable" required>
+                <option value="yes">Yes</option>
+                <option value="no" selected>No</option>
+              </select>
+            </div>
+
+            <div class="form-row" data-when-route="eap">
+              <label for="analyzer-salary-basis">Salary-basis and deduction records available</label>
+              <select id="analyzer-salary-basis" name="salaryBasisRecordsAvailable" required>
+                <option value="yes">Yes</option>
+                <option value="no" selected>No</option>
+              </select>
+            </div>
+          </div>
+        </details>
+      </fieldset>
+
+      <div class="form-error" data-form-error role="alert" tabindex="-1" hidden></div>
+
+      <div class="form-actions">
+        <button class="button" type="submit">Analyze the record <span aria-hidden="true">→</span></button>
+        <button class="secondary-action" type="reset">Reset example</button>
+      </div>
+
+      <p class="privacy-note">
+        <span aria-hidden="true">▣</span>
+        Inputs stay in this browser. Nothing is transmitted, stored, or analyzed elsewhere.
+      </p>
+    </form>
+  </section>
+
+  <section class="results" data-analyzer-results tabindex="-1" aria-labelledby="results-title" aria-live="polite">
+    <div class="panel-head results-head">
+      <div>
+        <p class="data-label">Analytical output · educational record reconciliation</p>
+        <h2 id="results-title"><span data-finding-count>{exampleResult.findings.length}</span> independent findings</h2>
+      </div>
+      <span data-result-status>Illustrative example</span>
+    </div>
+
+    <div class="result-summary">
+      <div>
+        <p data-result-summary>{exampleResult.summary}</p>
+        <strong>This instrument does not reach a legal conclusion.</strong>
+      </div>
+      <dl class="context-strip">
+        <div><dt>Starting route</dt><dd data-context-route>{exampleResult.context.wageOrderRoute}</dd></div>
+        <div><dt>Role</dt><dd data-context-role>{exampleResult.context.role}</dd></div>
+        <div><dt>Pay methods</dt><dd data-context-methods>{exampleResult.context.payMethods.join(' + ')}</dd></div>
+        <div><dt>Hours to reconcile</dt><dd data-context-hours>{exampleResult.hoursToReconcile}</dd></div>
+      </dl>
+    </div>
+
+    <div class="orientation-grid" aria-label="Analysis orientation">
+      <section>
+        <span>01 · Facts / measure</span>
+        <h3>Facts to reconcile</h3>
+        <ul data-facts-list>
+          {factFindings.map((finding) => <li>{finding.title}</li>)}
+        </ul>
+      </section>
+      <section>
+        <span>02 · Coverage</span>
+        <h3>Predicates to test</h3>
+        <ul data-predicates-list>
+          {predicateFindings.map((finding) => <li>{finding.title}</li>)}
+        </ul>
+      </section>
+      <section>
+        <span>03 · Verify / act</span>
+        <h3>Records to pull</h3>
+        <ul data-records-list>
+          {exampleResult.recordPull.map((record) => <li>{record}</li>)}
+        </ul>
+      </section>
+    </div>
+
+    <div class="findings-heading">
+      <div>
+        <span class="data-label">Finding ledger</span>
+        <h3>Expand each question independently.</h3>
+      </div>
+      <p>An entered fact can support one point while leaving another unresolved.</p>
+    </div>
+
+    <div class="finding-list" data-findings-list>
+      {exampleResult.findings.map((finding, index) => {
+        const linkedAuthorities = getAuthorities(finding.authorityIds);
+        return (
+          <details class="finding" data-status={finding.status} open={index === 0}>
+            <summary>
+              <span class="finding-number">{String(index + 1).padStart(2, '0')}</span>
+              <span class="finding-title"><strong>{finding.title}</strong><small>{finding.enteredFact}</small></span>
+              <span class="finding-status">{statusLabels[finding.status]}</span>
+              <span class="disclosure-icon" aria-hidden="true"></span>
+            </summary>
+            <div class="finding-body">
+              <section><h4>Basis</h4><p>{finding.basis}</p></section>
+              <section><h4>Why it matters</h4><p>{finding.whyItMatters}</p></section>
+              <section><h4>Proof to pull</h4><ul>{finding.proofToPull.map((record) => <li>{record}</li>)}</ul></section>
+              <section class="authority-cell">
+                <h4>Primary authority</h4>
+                <ul>{linkedAuthorities.map((authority) => <li><a href={authority.url}>{authority.shortLabel}</a></li>)}</ul>
+              </section>
+              <aside><strong>Analytical limit</strong><p>{finding.limits}</p></aside>
+            </div>
+          </details>
+        );
+      })}
+    </div>
+
+    <footer class="result-actions">
+      <div>
+        <span>Record pull</span>
+        <p data-record-pull-summary>{exampleResult.recordPull.join(' · ')}</p>
+      </div>
+      <div class="no-print">
+        <button class="secondary-action" type="button" data-print-analysis>Print analysis</button>
+        <a class="secondary-action" href="/authorities/">Open related authorities</a>
+      </div>
+    </footer>
+  </section>
+</div>
+
+<script>
+  import { initializePaySystemAnalyzer } from '../../scripts/pay-system-analyzer.ts';
+  initializePaySystemAnalyzer();
+</script>
+
+<style>
+  .analyzer {
+    display: grid;
+    grid-template-columns: minmax(26rem, 0.88fr) minmax(34rem, 1.35fr);
+    border: 2px solid var(--color-ink);
+    background: #fff;
+  }
+
+  .worksheet,
+  .results {
+    min-width: 0;
+    padding: clamp(1.1rem, 2.4vw, 2.25rem);
+  }
+
+  .worksheet {
+    border-right: 2px solid var(--color-ink);
+    background: var(--color-paper-blue);
+  }
+
+  .results {
+    background: #fff;
+  }
+
+  .panel-head {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    border-bottom: 2px solid var(--color-ink);
+    padding-bottom: 1rem;
+  }
+
+  .panel-head p,
+  .panel-head h2 {
+    margin-bottom: 0;
+  }
+
+  .panel-head h2 {
+    max-width: 28rem;
+    font-size: clamp(1.55rem, 2.3vw, 2.25rem);
+    line-height: 1.03;
+  }
+
+  .panel-head > span {
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.04em;
+    text-align: right;
+    text-transform: uppercase;
+  }
+
+  .sequence {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    margin: 0;
+    padding: 1.25rem 0 1.1rem;
+    list-style: none;
+  }
+
+  .sequence li {
+    position: relative;
+    display: grid;
+    gap: 0.4rem;
+    justify-items: center;
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-size: clamp(0.66rem, 1vw, 0.85rem);
+    font-weight: 600;
+    line-height: 1;
+    text-align: center;
+  }
+
+  .sequence li:not(:last-child)::after {
+    position: absolute;
+    z-index: 0;
+    top: 0.88rem;
+    left: calc(50% + 1.1rem);
+    width: calc(100% - 2.2rem);
+    border-top: 1px solid var(--color-cobalt);
+    content: '';
+  }
+
+  .sequence span {
+    z-index: 1;
+    display: grid;
+    width: 1.8rem;
+    height: 1.8rem;
+    place-items: center;
+    border: 1px solid var(--color-cobalt);
+    background: #fff;
+    color: var(--color-cobalt-dark);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+  }
+
+  fieldset {
+    margin: 0;
+    border: 0;
+    border-top: var(--rule);
+    padding: 1.15rem 0 0;
+  }
+
+  fieldset + fieldset {
+    margin-top: 1.5rem;
+  }
+
+  legend {
+    display: flex;
+    gap: 0.65rem;
+    padding: 0;
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+    font-weight: 650;
+    letter-spacing: -0.025em;
+    line-height: 1;
+  }
+
+  legend span {
+    color: var(--color-cobalt-dark);
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0;
+  }
+
+  .fieldset-note {
+    max-width: 36rem;
+    margin: 0.45rem 0 0.7rem;
+    color: var(--color-muted);
+    font-size: 0.83rem;
+    line-height: 1.4;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(10rem, 0.95fr);
+    gap: 1rem;
+    align-items: center;
+    border-top: 1px solid color-mix(in srgb, var(--color-rule) 78%, transparent);
+    padding-block: 0.72rem;
+  }
+
+  .form-row[hidden] {
+    display: none;
+  }
+
+  label {
+    display: grid;
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-size: 0.96rem;
+    font-weight: 620;
+    line-height: 1.15;
+  }
+
+  label small {
+    margin-top: 0.2rem;
+    color: var(--color-muted);
+    font-family: var(--font-body);
+    font-size: 0.68rem;
+    font-weight: 400;
+    line-height: 1.28;
+  }
+
+  select,
+  input[type='number'] {
+    width: 100%;
+    min-height: 2.75rem;
+    border: 1px solid #9db0c8;
+    padding: 0.55rem 0.65rem;
+    background: #fff;
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+  }
+
+  select:focus,
+  input[type='number']:focus {
+    border-color: var(--color-cobalt);
+  }
+
+  .number-input {
+    position: relative;
+  }
+
+  .number-input input {
+    padding-right: 3.65rem;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .number-input span {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.65rem;
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+  }
+
+  .evidence-disclosure {
+    margin-top: 0.8rem;
+    border: 1px solid var(--color-rule);
+    background: #fff;
+  }
+
+  .evidence-disclosure > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.8rem 0.9rem;
+    color: var(--color-ink);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .evidence-disclosure > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .evidence-disclosure > summary::after {
+    color: var(--color-cobalt);
+    content: '+';
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+  }
+
+  .evidence-disclosure[open] > summary::after {
+    content: '−';
+  }
+
+  .evidence-disclosure summary > span {
+    font-family: var(--font-display);
+    font-weight: 650;
+  }
+
+  .evidence-disclosure summary small {
+    margin-left: auto;
+    color: var(--color-muted);
+    font-size: 0.7rem;
+  }
+
+  .evidence-fields {
+    border-top: var(--rule);
+    padding-inline: 0.9rem;
+  }
+
+  .form-error {
+    margin-top: 1rem;
+    border: 1px solid var(--color-signal);
+    border-left-width: 5px;
+    padding: 0.8rem 0.9rem;
+    background: #fff4f1;
+    color: #842b21;
+    font-size: 0.85rem;
+  }
+
+  .form-actions {
+    display: grid;
+    grid-template-columns: minmax(12rem, 1.5fr) minmax(9rem, 0.8fr);
+    gap: 0.75rem;
+    margin-top: 1.4rem;
+  }
+
+  .secondary-action {
+    display: inline-flex;
+    min-height: 2.85rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-cobalt);
+    padding: 0.65rem 0.85rem;
+    background: #fff;
+    color: var(--color-cobalt-dark);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .secondary-action:hover {
+    background: var(--color-paper-blue);
+    text-decoration: none;
+  }
+
+  .privacy-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 1rem 0 0;
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    line-height: 1.35;
+    text-align: center;
+  }
+
+  .privacy-note span {
+    color: var(--color-cobalt-dark);
+  }
+
+  .results-head {
+    border-bottom-color: var(--color-cobalt);
+  }
+
+  .result-summary {
+    border-bottom: 3px solid var(--color-ink);
+    padding-block: 1.2rem;
+  }
+
+  .result-summary > div:first-child {
+    display: flex;
+    gap: 1.25rem;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .result-summary p {
+    max-width: 38rem;
+    margin: 0;
+    color: var(--color-ink);
+    font-size: 1.05rem;
+    font-weight: 650;
+  }
+
+  .result-summary strong {
+    max-width: 16rem;
+    color: var(--color-signal-text);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.025em;
+    line-height: 1.35;
+    text-align: right;
+    text-transform: uppercase;
+  }
+
+  .context-strip {
+    display: grid;
+    grid-template-columns: 1.5fr 0.7fr 1fr 0.7fr;
+    margin: 1.1rem 0 0;
+    border: var(--rule);
+  }
+
+  .context-strip > div {
+    min-width: 0;
+    padding: 0.65rem 0.75rem;
+  }
+
+  .context-strip > div + div {
+    border-left: var(--rule);
+  }
+
+  .context-strip dt,
+  .orientation-grid > section > span,
+  .finding-body h4,
+  .result-actions span {
+    color: var(--color-cobalt-dark);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.055em;
+    text-transform: uppercase;
+  }
+
+  .context-strip dd {
+    margin: 0.2rem 0 0;
+    color: var(--color-ink);
+    font-size: 0.78rem;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+    text-transform: capitalize;
+  }
+
+  .orientation-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-bottom: 2px solid var(--color-ink);
+  }
+
+  .orientation-grid > section {
+    min-width: 0;
+    padding: 1.15rem 1rem 1.15rem 0;
+  }
+
+  .orientation-grid > section + section {
+    border-left: var(--rule);
+    padding-left: 1rem;
+  }
+
+  .orientation-grid h3 {
+    margin: 0.4rem 0 0.7rem;
+    font-size: 1.18rem;
+    line-height: 1.05;
+  }
+
+  .orientation-grid ul {
+    margin: 0;
+    padding-left: 1rem;
+  }
+
+  .orientation-grid li {
+    color: var(--color-text);
+    font-size: 0.76rem;
+    line-height: 1.35;
+  }
+
+  .orientation-grid li + li {
+    margin-top: 0.35rem;
+  }
+
+  .findings-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-block: 1.5rem 0.9rem;
+  }
+
+  .findings-heading span,
+  .findings-heading h3,
+  .findings-heading p {
+    margin: 0;
+  }
+
+  .findings-heading h3 {
+    margin-top: 0.35rem;
+    font-size: 1.35rem;
+  }
+
+  .findings-heading p {
+    max-width: 20rem;
+    color: var(--color-muted);
+    font-size: 0.76rem;
+    line-height: 1.35;
+    text-align: right;
+  }
+
+  .finding {
+    border: 1px solid var(--color-rule);
+    background: #fff;
+  }
+
+  .finding + .finding {
+    border-top: 0;
+  }
+
+  .finding[open] {
+    border: 1px solid var(--color-cobalt);
+  }
+
+  .finding[open] + .finding {
+    border-top: 0;
+  }
+
+  .finding > summary {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    gap: 0.8rem;
+    align-items: start;
+    padding: 0.9rem 0.95rem;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .finding > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .finding-number {
+    color: var(--color-cobalt-dark);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 600;
+  }
+
+  .finding-title {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .finding-title strong {
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-size: 1.12rem;
+    line-height: 1.05;
+  }
+
+  .finding-title small {
+    color: var(--color-muted);
+    font-size: 0.73rem;
+    line-height: 1.3;
+  }
+
+  .finding-status {
+    color: var(--color-cobalt-dark);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .finding[data-status='reconcile'] .finding-status,
+  .finding[data-status='verify'] .finding-status {
+    color: var(--color-signal-text);
+  }
+
+  .finding[data-status='supported-by-inputs'] .finding-status {
+    color: var(--color-positive);
+  }
+
+  .disclosure-icon {
+    position: relative;
+    width: 1.3rem;
+    height: 1.3rem;
+    border: 1px solid var(--color-cobalt);
+  }
+
+  .disclosure-icon::before,
+  .disclosure-icon::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.6rem;
+    border-top: 1px solid var(--color-cobalt);
+    content: '';
+    transform: translate(-50%, -50%);
+  }
+
+  .disclosure-icon::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  .finding[open] .disclosure-icon::after {
+    display: none;
+  }
+
+  .finding-body {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-top: var(--rule);
+  }
+
+  .finding-body > section {
+    min-width: 0;
+    padding: 0.9rem;
+  }
+
+  .finding-body > section + section {
+    border-left: var(--rule);
+  }
+
+  .finding-body h4 {
+    margin-bottom: 0.5rem;
+  }
+
+  .finding-body p,
+  .finding-body li {
+    margin-bottom: 0;
+    color: var(--color-text);
+    font-size: 0.75rem;
+    line-height: 1.45;
+  }
+
+  .finding-body ul {
+    margin: 0;
+    padding-left: 1rem;
+  }
+
+  .finding-body li + li {
+    margin-top: 0.25rem;
+  }
+
+  .authority-cell a {
+    color: var(--color-cobalt-dark);
+  }
+
+  .finding-body aside {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 8rem 1fr;
+    gap: 0.75rem;
+    border-top: var(--rule);
+    padding: 0.75rem 0.9rem;
+    background: var(--color-paper-blue);
+  }
+
+  .finding-body aside strong {
+    color: var(--color-signal-text);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .finding-body aside p {
+    color: var(--color-muted);
+  }
+
+  .result-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: end;
+    margin-top: 1rem;
+    border: var(--rule);
+    padding: 0.8rem 0.9rem;
+  }
+
+  .result-actions p {
+    margin: 0.25rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.69rem;
+    line-height: 1.35;
+  }
+
+  .result-actions > div:last-child {
+    display: flex;
+    gap: 0.6rem;
+  }
+
+  @media (max-width: 70rem) {
+    .analyzer {
+      grid-template-columns: 1fr;
+    }
+
+    .worksheet {
+      border-right: 0;
+      border-bottom: 2px solid var(--color-ink);
+    }
+  }
+
+  @media (max-width: 48rem) {
+    .orientation-grid,
+    .context-strip,
+    .finding-body {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .context-strip > div:nth-child(3),
+    .finding-body > section:nth-child(3) {
+      border-left: 0;
+    }
+
+    .context-strip > div:nth-child(n + 3),
+    .finding-body > section:nth-child(n + 3) {
+      border-top: var(--rule);
+    }
+
+    .orientation-grid > section:last-child {
+      grid-column: 1 / -1;
+      border-top: var(--rule);
+      border-left: 0;
+      padding-left: 0;
+    }
+
+    .result-actions {
+      grid-template-columns: 1fr;
+    }
+
+    .result-actions > div:last-child {
+      flex-wrap: wrap;
+    }
+  }
+
+  @media (max-width: 36rem) {
+    .worksheet,
+    .results {
+      padding: 1rem;
+    }
+
+    .panel-head,
+    .result-summary > div:first-child,
+    .findings-heading {
+      align-items: start;
+      flex-direction: column;
+    }
+
+    .panel-head > span,
+    .result-summary strong,
+    .findings-heading p {
+      max-width: none;
+      text-align: left;
+    }
+
+    .sequence li {
+      font-size: 0;
+    }
+
+    .sequence span {
+      font-size: 0.62rem;
+    }
+
+    .form-row,
+    .form-actions,
+    .orientation-grid,
+    .context-strip,
+    .finding-body {
+      grid-template-columns: 1fr;
+    }
+
+    .form-row {
+      gap: 0.45rem;
+    }
+
+    .context-strip > div + div,
+    .context-strip > div:nth-child(3),
+    .finding-body > section + section,
+    .finding-body > section:nth-child(3) {
+      border-top: var(--rule);
+      border-left: 0;
+    }
+
+    .orientation-grid > section,
+    .orientation-grid > section + section,
+    .orientation-grid > section:last-child {
+      grid-column: auto;
+      border-top: var(--rule);
+      border-left: 0;
+      padding: 1rem 0;
+    }
+
+    .finding > summary {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+    }
+
+    .finding-status {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
+    .disclosure-icon {
+      grid-column: 3;
+      grid-row: 1 / span 2;
+    }
+
+    .finding-body aside {
+      grid-template-columns: 1fr;
+    }
+
+    .result-actions > div:last-child,
+    .result-actions .secondary-action {
+      width: 100%;
+    }
+  }
+
+  @media print {
+    .analyzer {
+      display: block;
+      border: 0;
+    }
+
+    .worksheet,
+    .results-head > span,
+    .orientation-grid,
+    .findings-heading p {
+      display: none;
+    }
+
+    .results {
+      padding: 0;
+    }
+
+    .finding,
+    .finding[open] {
+      break-inside: avoid;
+      border: 1px solid #777;
+    }
+
+    .finding + .finding {
+      margin-top: 0.4rem;
+      border-top: 1px solid #777;
+    }
+
+    .finding > summary {
+      list-style: none;
+    }
+
+    .finding:not([open]) > .finding-body {
+      display: grid;
+    }
+
+    .disclosure-icon {
+      display: none;
+    }
+
+    .result-actions {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

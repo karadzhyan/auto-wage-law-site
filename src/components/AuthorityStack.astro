@@ -1,0 +1,72 @@
+---
+import { authorities, getAuthorities, type Authority, type AuthorityId } from '../data/authorities';
+
+interface Props {
+  ids?: readonly AuthorityId[];
+  compact?: boolean;
+  title?: string;
+}
+
+const { ids, compact = false, title = 'Primary authority' } = Astro.props;
+const selected: readonly Authority[] = ids ? getAuthorities(ids) : authorities;
+---
+
+<section class:list={['authority-stack', { 'authority-stack--compact': compact }]} aria-label={title}>
+  {!compact && <header><p class="eyebrow">Rule and boundary</p><h2>{title}</h2></header>}
+  <ol>
+    {selected.map((authority) => (
+      <li data-jurisdiction={authority.jurisdiction} data-type={authority.sourceType}>
+        <div class="authority-meta">
+          <span>{authority.jurisdiction}</span>
+          <span>{authority.sourceType.replace('-', ' ')}</span>
+        </div>
+        <h3><a href={authority.url} rel="external">{authority.shortLabel}</a></h3>
+        {!compact && <p class="authority-title">{authority.title}</p>}
+        {!compact && authority.textUrl && <p class="authority-text-link"><a href={authority.textUrl} rel="external">Read the opinion text <span aria-hidden="true">↗</span></a></p>}
+        <dl>
+          <div><dt>Proposition</dt><dd>{authority.proposition}</dd></div>
+          <div><dt>Limit</dt><dd>{authority.limits}</dd></div>
+        </dl>
+        <div class="authority-check">
+          <span>Source checked {authority.checked}</span>
+          {authority.pinpoint && <span>{authority.pinpoint}</span>}
+        </div>
+        {!compact && authority.statusNote && <p class="authority-status">{authority.statusNote}</p>}
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style>
+  header { margin-bottom: var(--space-6); }
+  header :where(h2, p) { margin-bottom: 0; }
+  ol { display: grid; gap: 0; margin: 0; padding: 0; border-top: 3px solid var(--color-ink); list-style: none; }
+  li { display: grid; grid-template-columns: minmax(10rem, 1fr) minmax(0, 3fr); gap: 0.65rem var(--space-6); border-bottom: var(--rule); padding-block: 1.3rem; }
+  .authority-meta,
+  .authority-check { display: flex; flex-wrap: wrap; gap: 0.8rem; color: var(--color-muted); font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.04em; text-transform: uppercase; }
+  h3 { grid-column: 1; margin: 0; font-size: 1.1rem; }
+  h3 a { color: var(--color-cobalt-dark); }
+  .authority-title { grid-column: 1; margin: 0; color: var(--color-muted); font-size: 0.82rem; line-height: 1.4; }
+  .authority-text-link { grid-column: 1; margin: 0; font-family: var(--font-mono); font-size: 0.68rem; }
+  .authority-status { grid-column: 1 / -1; margin: 0; color: var(--color-muted); font-size: 0.76rem; line-height: 1.4; }
+  dl { grid-column: 2; grid-row: 1 / span 3; display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); margin: 0; }
+  dt { margin-bottom: 0.4rem; color: var(--color-cobalt-dark); font-family: var(--font-mono); font-size: 0.63rem; font-weight: 600; text-transform: uppercase; }
+  dd { margin: 0; font-size: 0.88rem; line-height: 1.48; overflow-wrap: anywhere; }
+  dl div:last-child { border-left: 2px solid var(--color-signal); padding-left: 0.85rem; }
+  .authority-check { grid-column: 1 / -1; padding-top: 0.4rem; }
+
+  .authority-stack--compact ol { border-top-width: 2px; }
+  .authority-stack--compact li { grid-template-columns: 1fr; gap: 0.55rem; padding-block: 0.85rem; }
+  .authority-stack--compact h3,
+  .authority-stack--compact dl,
+  .authority-stack--compact .authority-check { grid-column: 1; grid-row: auto; }
+  .authority-stack--compact dl { grid-template-columns: 1fr; gap: 0.55rem; }
+  .authority-stack--compact dl div:first-child { display: none; }
+  .authority-stack--compact dd { font-size: 0.74rem; }
+
+  @media (max-width: 44rem) {
+    li { grid-template-columns: 1fr; }
+    dl { grid-column: 1; grid-row: auto; }
+  }
+  @media (max-width: 32rem) { dl { grid-template-columns: 1fr; } }
+</style>

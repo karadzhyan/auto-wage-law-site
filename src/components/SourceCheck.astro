@@ -1,0 +1,53 @@
+---
+interface Props {
+  sourceChecked: string;
+  nextCheck: string;
+  checkScope: string;
+  authorityCount?: number;
+  compact?: boolean;
+}
+
+const { sourceChecked, nextCheck, checkScope, authorityCount, compact = false } = Astro.props;
+---
+
+<aside class:list={['source-check', { 'source-check--compact': compact }]} aria-label="Source-check record">
+  <div class="check-mark" aria-hidden="true">SC</div>
+  <div class="check-primary">
+    <span>Source checked</span>
+    <strong><time datetime={sourceChecked}>{sourceChecked}</time></strong>
+  </div>
+  {!compact && <p>{checkScope}</p>}
+  <dl>
+    {authorityCount !== undefined && <div><dt>Authorities</dt><dd>{authorityCount}</dd></div>}
+    <div><dt>Next scheduled check</dt><dd><time datetime={nextCheck}>{nextCheck}</time></dd></div>
+  </dl>
+  {!compact && <small>This records scope and date. It is not a confidence score, legal opinion, or promise that no authority changed afterward.</small>}
+</aside>
+
+<style>
+  .source-check {
+    display: grid;
+    grid-template-columns: auto minmax(8rem, 0.8fr) minmax(12rem, 2fr) auto;
+    gap: var(--space-4);
+    align-items: center;
+    border-block: var(--rule);
+    padding-block: 0.9rem;
+  }
+  .check-mark { display: grid; width: 2.25rem; height: 2.25rem; place-items: center; border: 2px solid var(--color-positive); color: var(--color-positive); font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600; }
+  .check-primary { display: grid; }
+  .check-primary span,
+  dt { color: var(--color-muted); font-family: var(--font-mono); font-size: 0.62rem; text-transform: uppercase; }
+  .check-primary strong { color: var(--color-positive); font-family: var(--font-mono); font-size: 0.8rem; }
+  p { margin: 0; font-size: 0.82rem; line-height: 1.4; }
+  dl { display: flex; flex-wrap: wrap; gap: 1.1rem; margin: 0; }
+  dd { margin: 0.15rem 0 0; color: var(--color-ink); font-family: var(--font-mono); font-size: 0.7rem; }
+  small { grid-column: 3 / -1; color: var(--color-muted); font-size: 0.68rem; line-height: 1.35; overflow-wrap: anywhere; }
+  .source-check--compact { grid-template-columns: auto 1fr; }
+  .source-check--compact dl { grid-column: 2; }
+  @media (max-width: 48rem) {
+    .source-check { grid-template-columns: auto 1fr; }
+    .source-check p,
+    .source-check dl,
+    .source-check small { grid-column: 2; }
+  }
+</style>

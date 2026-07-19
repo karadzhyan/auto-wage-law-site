@@ -2,24 +2,32 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import LibraryIndex from '../components/LibraryIndex.astro';
 import RoleNavigator from '../components/RoleNavigator.astro';
+import SourceCheck from '../components/SourceCheck.astro';
 ---
 
 <BaseLayout title="Law library" description="Dealership pay-plan and wage-and-hour issue guides with primary public sources.">
   <main id="main-content">
     <header class="library-hero shell">
-      <p class="eyebrow">California + federal · primary sources linked</p>
-      <h1>Open the law library.</h1>
-      <p class="lede">Choose a dealership role or move directly to an issue. Every article keeps its scope, review date, and primary sources in view.</p>
+      <p class="eyebrow">California + federal · proposition-bounded primary sources</p>
+      <div class="hero-grid"><h1>Enter by role.<br /><span>Test by issue.</span></h1><p class="lede">Choose the closest dealership role or move directly to a collision point. Every guide states the question, legal routes, decision sequence, evidence limits, worked example, and source-check scope.</p></div>
+      <SourceCheck sourceChecked="2026-07-18" nextCheck="2027-01-15" checkScope="Thirteen core guides, cited authority links, rule propositions, inferential limits, worked examples, and cross-guide navigation." />
     </header>
     <section class="shell section section--ruled">
       <div class="section-heading"><div><p class="eyebrow">By pay plan</p><h2>Who is being paid?</h2></div><p>Role labels are a starting point. Actual duties and pay mechanics still matter.</p></div>
       <RoleNavigator />
     </section>
     <section class="section section--mist"><div class="shell"><div class="section-heading"><div><p class="eyebrow">By issue</p><h2>What is the collision point?</h2></div><p>Use issue pages to inspect one legal problem across multiple dealership roles.</p></div><LibraryIndex /></div></section>
+    <section class="section shell authority-link"><div><p class="eyebrow">Authority register</p><h2>See the rule and the boundary behind each citation.</h2></div><div><p>Review the official source, bounded proposition, pinpoint, current status note, and what the authority does not decide.</p><a class="button" href="/authorities/">Open the source register</a></div></section>
   </main>
 </BaseLayout>
 
 <style>
   .library-hero { padding-block: var(--space-9); }
-  .library-hero h1 { max-width: 60rem; margin-bottom: 1.5rem; }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(18rem, 0.8fr); gap: var(--space-8); align-items: end; margin-bottom: var(--space-7); }
+  .hero-grid h1,
+  .hero-grid p { margin-bottom: 0; }
+  .hero-grid h1 span { color: var(--color-cobalt); }
+  .authority-link { display: grid; grid-template-columns: minmax(16rem, 1fr) minmax(16rem, 0.7fr); gap: var(--space-8); border-top: 4px solid var(--color-ink); }
+  .authority-link p { margin-top: 0; }
+  @media (max-width: 50rem) { .hero-grid, .authority-link { grid-template-columns: 1fr; } }
 </style>

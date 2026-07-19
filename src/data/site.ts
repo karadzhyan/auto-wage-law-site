@@ -2,9 +2,9 @@ export const site = {
   name: 'Auto Wage Law',
   shortDescription: 'Wage & hour intelligence · retail automotive',
   description:
-    'Independent guidance for the people who run dealerships and the people who work in them.',
+    'A source-bounded system for mapping dealership work, pay rules, legal tests, records, and next actions.',
   status: 'Independent educational resource — not legal advice.',
-  reviewed: 'Source checked 2026-07',
+  reviewed: 'Source checked 2026-07-18',
   reviewDate: '2026-07-18',
 };
 

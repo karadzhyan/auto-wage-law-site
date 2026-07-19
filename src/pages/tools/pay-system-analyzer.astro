@@ -1,0 +1,171 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PaySystemAnalyzer from '../../components/tools/PaySystemAnalyzer.astro';
+---
+
+<BaseLayout
+  title="Pay System Analyzer"
+  description="A browser-local analytical worksheet that separates pay-system facts, classifications, measurements, legal predicates, and record questions."
+>
+  <main id="main-content">
+    <header class="tool-hero shell">
+      <div>
+        <h1>Analyze a pay system.</h1>
+        <p class="lede">Enter what the records show. The analyzer separates facts, classifications, measurements, legal tests, and proof—then identifies what remains unresolved.</p>
+      </div>
+      <div class="hero-method" aria-label="Instrument method and limits">
+        <p><strong>Facts → Classify → Measure → Test → Verify → Act</strong></p>
+        <p>California + federal · source checked July 18, 2026</p>
+        <p>Browser-local · no account · no saved inputs</p>
+      </div>
+    </header>
+
+    <section class="tool-stage" aria-label="Pay System Analyzer instrument">
+      <div class="tool-shell">
+        <PaySystemAnalyzer />
+      </div>
+    </section>
+
+    <section class="tool-notes shell" aria-labelledby="use-result-title">
+      <div>
+        <p class="data-label">How to use the output</p>
+        <h2 id="use-result-title">Treat it as a reconciliation plan.</h2>
+      </div>
+      <div class="note-copy">
+        <p>Match the time, payroll, production, plan, duty, and establishment records to the same worker and dates. A finding identifies a question or predicate; it does not establish the answer.</p>
+        <nav aria-label="Analyzer follow-up">
+          <a class="text-link" href="/analysis-map/">Open the analysis map</a>
+          <a class="text-link" href="/records/">Review the evidence map</a>
+          <a class="text-link" href="/disclaimer/">Read the instrument limits</a>
+        </nav>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .tool-hero {
+    width: min(calc(100% - (2 * var(--page-pad))), 94rem);
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(18rem, 0.65fr);
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: end;
+    padding-block: clamp(1.75rem, 3vw, 2.75rem);
+  }
+
+  .tool-hero h1 {
+    max-width: none;
+    margin-bottom: 1.25rem;
+    font-size: clamp(3rem, 5vw, 5.35rem);
+    line-height: 0.92;
+  }
+
+  .tool-hero .lede {
+    max-width: 58rem;
+    margin-bottom: 0;
+  }
+
+  .hero-method {
+    border-top: 3px solid var(--color-ink);
+    padding-top: 1rem;
+  }
+
+  .hero-method p {
+    margin: 0;
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    line-height: 1.45;
+    text-transform: uppercase;
+  }
+
+  .hero-method p + p {
+    margin-top: 0.65rem;
+    border-top: var(--rule);
+    padding-top: 0.65rem;
+  }
+
+  .hero-method strong {
+    color: var(--color-cobalt-dark);
+    font-weight: 600;
+  }
+
+  .tool-stage {
+    border-block: var(--rule);
+    padding-block: clamp(1rem, 3vw, 2.75rem);
+    background: var(--color-mist);
+  }
+
+  .tool-shell {
+    width: min(calc(100% - (2 * var(--page-pad))), 94rem);
+    margin-inline: auto;
+  }
+
+  .tool-notes {
+    display: grid;
+    grid-template-columns: minmax(16rem, 0.7fr) minmax(0, 1.3fr);
+    gap: clamp(2rem, 6vw, 6rem);
+    padding-block: var(--space-8);
+  }
+
+  .tool-notes h2 {
+    margin-bottom: 0;
+    font-size: clamp(2rem, 4vw, 3.4rem);
+  }
+
+  .note-copy {
+    border-top: 3px solid var(--color-ink);
+    padding-top: 1rem;
+  }
+
+  .note-copy > p {
+    max-width: 48rem;
+    color: var(--color-muted);
+  }
+
+  .note-copy nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem 1.5rem;
+  }
+
+  @media (max-width: 52rem) {
+    .tool-hero,
+    .tool-notes {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+
+  @media (max-width: 28rem) {
+    .tool-hero {
+      padding-block: 2.75rem;
+    }
+
+    .tool-hero h1 {
+      font-size: clamp(2.8rem, 14vw, 4rem);
+    }
+
+    .note-copy nav {
+      align-items: start;
+      flex-direction: column;
+    }
+  }
+
+  @media print {
+    .tool-hero,
+    .tool-notes {
+      display: none;
+    }
+
+    .tool-stage {
+      border: 0;
+      padding: 0;
+      background: #fff;
+    }
+
+    .tool-shell {
+      width: 100%;
+    }
+  }
+</style>

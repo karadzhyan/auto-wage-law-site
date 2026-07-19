@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EvidenceMap from '../components/EvidenceMap.astro';
+import SourceCheck from '../components/SourceCheck.astro';
+---
+
+<BaseLayout title="Records and evidence" description="A record-by-record map of what dealership time, system, output, pay, plan, establishment, and expense evidence can—and cannot—establish.">
+  <main id="main-content">
+    <header class="records-hero shell">
+      <p class="eyebrow">Evidence architecture</p>
+      <div class="hero-grid">
+        <h1>A record is not<br /><span>the proposition.</span></h1>
+        <p class="lede">Records gain meaning when the dates, employee, pay period, workweek, transaction, and legal question are aligned. A timestamp can contradict a timecard without proving every minute between them.</p>
+      </div>
+      <SourceCheck sourceChecked="2026-07-18" nextCheck="2027-01-15" checkScope="Record duties, burden principles, source boundaries, and cross-system reconciliation method." />
+    </header>
+
+    <section class="section shell">
+      <div class="section-heading">
+        <div><p class="eyebrow">Seven evidence domains</p><h2>What this record cannot establish alone</h2></div>
+        <p>The limit column is as important as the proof column. It prevents a clean payroll statement, isolated system event, or written plan from carrying an inference it cannot support.</p>
+      </div>
+      <EvidenceMap title="Record classes and inferential limits" />
+    </section>
+
+    <section class="section section--mist">
+      <div class="shell reconciliation">
+        <div><p class="eyebrow">Reconciliation protocol</p><h2>Match first. Infer second.</h2></div>
+        <ol>
+          <li><span>01</span><strong>Normalize identity</strong><p>Map employee, entity, location, department, pay code, repair order, and deal identifiers across systems.</p></li>
+          <li><span>02</span><strong>Normalize time</strong><p>Fix the workday, workweek, pay period, earning period, transaction date, and effective plan version before comparison.</p></li>
+          <li><span>03</span><strong>Preserve raw data</strong><p>Keep exports, metadata, edit histories, formulas, and later corrections; a screenshot is a view, not the underlying audit trail.</p></li>
+          <li><span>04</span><strong>Test both directions</strong><p>Identify corroboration and contradiction. Search for records that would disprove the working account, not only those that support it.</p></li>
+          <li><span>05</span><strong>State the inference limit</strong><p>Separate what the packet establishes, what it suggests, what it cannot decide, and which missing record would resolve the gap.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section shell packets" aria-labelledby="packets-title">
+      <div class="section-heading"><div><p class="eyebrow">Role packets</p><h2 id="packets-title">Assemble around the question.</h2></div><p>These are starting packets, not universal discovery lists. Expand by entity, period, pay component, asserted route, and disputed activity.</p></div>
+      <div class="packet-list">
+        <article id="technician-packet"><span>T01</span><h3>Technician</h3><p>Raw time and edits; schedules; repair orders; flag ledger; training and warranty events; pay register and statements; written production formula; tool and expense records.</p></article>
+        <article id="commission-packet"><span>C02</span><h3>Commissioned sales</h3><p>Signed plan versions; CRM and schedule activity; deal jackets; gross and pack detail; delivery, funding and cancellation events; draw ledger; transaction debits; pay and statement detail.</p></article>
+        <article id="advisor-packet"><span>A03</span><h3>Service advisor</h3><p>Lane schedules; raw time; repair orders; customer contacts; labor, parts and CSI components; plan versions; establishment facts; pay registers and statements.</p></article>
+        <article id="finance-packet"><span>F04</span><h3>Finance & insurance</h3><p>Actual-duty samples; deal and product detail; funding and cancellation events; plan and guarantee; representative-period analysis; time, draw, chargeback and pay records.</p></article>
+        <article id="support-packet"><span>S05</span><h3>Parts & support</h3><p>Entity and vendor relationships; actual duties and control; schedules and time; system activity; incentive unit; expenses; pay register; statements; applicable establishment facts.</p></article>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .records-hero { padding-block: clamp(3rem, 7vw, 6rem) var(--space-7); }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(18rem, 1fr); gap: var(--space-7); align-items: end; margin-bottom: var(--space-7); }
+  h1 { margin-bottom: 0; }
+  h1 span { color: var(--color-cobalt); }
+  .hero-grid p { margin-bottom: 0; }
+  .reconciliation { display: grid; grid-template-columns: minmax(16rem, 1fr) minmax(0, 2fr); gap: var(--space-8); }
+  .reconciliation ol { margin: 0; padding: 0; border-top: 4px solid var(--color-ink); list-style: none; }
+  .reconciliation li { display: grid; grid-template-columns: 3rem 10rem 1fr; gap: var(--space-4); border-bottom: var(--rule); padding-block: 1rem; }
+  .reconciliation li span { color: var(--color-cobalt); font-family: var(--font-mono); font-size: 0.7rem; }
+  .reconciliation li strong { font-family: var(--font-display); }
+  .reconciliation li p { margin: 0; font-size: 0.88rem; }
+  .packet-list { border-top: 4px solid var(--color-ink); }
+  .packet-list article { display: grid; grid-template-columns: 4rem minmax(10rem, 0.7fr) minmax(0, 2fr); gap: var(--space-4); border-bottom: var(--rule); padding-block: 1.15rem; scroll-margin-top: 2rem; }
+  .packet-list span { color: var(--color-cobalt); font-family: var(--font-mono); font-size: 0.7rem; }
+  .packet-list h3,
+  .packet-list p { margin: 0; }
+  .packet-list p { font-size: 0.9rem; }
+  @media (max-width: 52rem) { .hero-grid, .reconciliation { grid-template-columns: 1fr; } }
+  @media (max-width: 38rem) { .reconciliation li, .packet-list article { grid-template-columns: 2.5rem 1fr; } .reconciliation li p, .packet-list p { grid-column: 2; } }
+</style>

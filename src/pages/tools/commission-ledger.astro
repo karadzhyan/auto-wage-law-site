@@ -1,0 +1,111 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CommissionLedger from '../../components/tools/CommissionLedger.astro';
+---
+
+<BaseLayout
+  title="Commission Transaction Ledger"
+  description="A browser-local synthetic transaction ledger for tracing commission classification, earning events, payment timing, later debits, and the records needed to test each step."
+>
+  <main id="main-content">
+    <header class="tool-hero shell">
+      <div>
+        <h1>Trace a commission from plan to paycheck.</h1>
+        <p class="lede">Separate the earning rule, payment timing, advance, and later debit. A label such as “chargeback” does not answer what happened.</p>
+      </div>
+      <aside>
+        <strong>Synthetic working data</strong>
+        <p>Edit or add transactions without sending the inputs anywhere. The example resets when the page reloads.</p>
+      </aside>
+    </header>
+
+    <section class="tool-stage" aria-label="Commission transaction reconciliation tool">
+      <div class="tool-shell"><CommissionLedger /></div>
+    </section>
+
+    <section class="tool-boundary shell">
+      <div>
+        <h2>Reconciliation is not a conclusion.</h2>
+        <p>The ledger organizes entered credits, debits, dates, conditions, and supporting records. It does not classify a component, decide when wages were earned, select a payday rule, determine an exemption, or reach a legal conclusion.</p>
+      </div>
+      <nav aria-label="Continue the analysis">
+        <a href="/analysis-map/">Open the analysis map</a>
+        <a href="/records/">Build the record pull</a>
+        <a href="/issues/commission-chargebacks/">Read the chargeback guide</a>
+      </nav>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .tool-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 2.15fr) minmax(16rem, 0.85fr);
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: end;
+    padding-block: clamp(2rem, 3.5vw, 3.25rem);
+  }
+
+  .tool-hero h1 {
+    max-width: 64rem;
+    margin-bottom: 1.25rem;
+    font-size: clamp(2.55rem, 4.25vw, 4.35rem);
+  }
+
+  .tool-hero .lede { max-width: 60rem; margin: 0; }
+
+  .tool-hero aside {
+    border-top: 3px solid var(--color-ink);
+    padding-top: 0.9rem;
+  }
+
+  .tool-hero aside strong {
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .tool-hero aside p { margin: 0.45rem 0 0; color: var(--color-muted); font-size: var(--text-sm); }
+
+  .tool-stage { border-block: var(--rule); padding-block: clamp(1rem, 3vw, 2.25rem); background: var(--color-mist); }
+  .tool-shell { width: min(100% - (2 * clamp(0.75rem, 2vw, 1.5rem)), 94rem); margin-inline: auto; }
+
+  .tool-boundary {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr);
+    gap: clamp(2rem, 6vw, 6rem);
+    padding-block: var(--space-8);
+  }
+
+  .tool-boundary h2 { margin-bottom: 0.9rem; font-size: var(--text-h3); }
+  .tool-boundary p { max-width: 48rem; margin: 0; color: var(--color-muted); }
+  .tool-boundary nav { display: grid; align-content: start; border-top: 3px solid var(--color-ink); }
+  .tool-boundary a { border-bottom: var(--rule); padding: 0.7rem 0.15rem; color: var(--color-cobalt-dark); font-family: var(--font-mono); font-size: var(--text-xs); font-weight: 600; text-decoration: none; }
+  .tool-boundary a::after { content: ' →'; }
+  .tool-boundary a:hover { background: var(--color-paper-blue); }
+
+  @media (max-width: 50rem) {
+    .tool-hero,
+    .tool-boundary { grid-template-columns: 1fr; }
+    .tool-hero { align-items: start; gap: 2rem; }
+  }
+
+  @media (max-width: 30rem) {
+    .tool-hero { padding-block: 2.75rem; }
+    .tool-hero h1 { font-size: clamp(2.65rem, 14vw, 4rem); }
+    .tool-shell { width: calc(100% - 0.75rem); }
+  }
+
+  @media print {
+    .tool-hero { display: block; padding-block: 0 1rem; }
+    .tool-hero h1 { font-size: 24pt; }
+    .tool-hero aside,
+    .tool-boundary,
+    :global(header.site-header),
+    :global(footer.site-footer) { display: none !important; }
+    .tool-stage { border: 0; padding: 0; background: #fff; }
+    .tool-shell { width: 100%; }
+  }
+</style>

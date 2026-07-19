@@ -4,32 +4,32 @@ import ArrowIcon from './ArrowIcon.astro';
 
 <div class="audience-grid">
   <article>
-    <p class="section-number">01 · Dealer side</p>
-    <h3>Find the exposure before the demand letter does.</h3>
-    <p>Trace a pay plan from written terms to time records, payroll detail, and the rule that controls each step.</p>
+    <p class="section-number">01 · Dealer control path</p>
+    <h3>Stress-test the operating system.</h3>
+    <p>Assign an owner to the fact set, pay classification, calculation, legal route, matched record packet, and correction decision.</p>
     <ul>
-      <li><a href="/tools/pay-plan-check/">Check the pay-plan mechanics <ArrowIcon /></a></li>
-      <li><a href="/tools/exposure-snapshot/">Build a wages-only snapshot <ArrowIcon /></a></li>
-      <li><a href="/dealers/">Open the dealer review path <ArrowIcon /></a></li>
+      <li><a href="/tools/pay-system-analyzer/">Analyze one pay system <ArrowIcon /></a></li>
+      <li><a href="/tools/wage-scenario-lab/">Decompose entered wage layers <ArrowIcon /></a></li>
+      <li><a href="/dealers/">Open the dealer control path <ArrowIcon /></a></li>
     </ul>
   </article>
   <article>
-    <p class="section-number">02 · Worker side</p>
-    <h3>Know what your pay plan actually owes you.</h3>
-    <p>Match the role, the workday, and the wage statement before jumping to a legal conclusion.</p>
+    <p class="section-number">02 · Worker record path</p>
+    <h3>Reconstruct one matched period.</h3>
+    <p>Separate what happened, what each record shows, what contradicts it, and which question remains unresolved.</p>
     <ul>
-      <li><a href="/pay-plans/">Find your pay plan <ArrowIcon /></a></li>
-      <li><a href="/issues/off-the-clock/">Document time outside the record <ArrowIcon /></a></li>
-      <li><a href="/workers/">Open the worker review path <ArrowIcon /></a></li>
+      <li><a href="/pay-plans/">Open the closest role map <ArrowIcon /></a></li>
+      <li><a href="/records/">Build the evidence packet <ArrowIcon /></a></li>
+      <li><a href="/workers/">Open the worker reconstruction path <ArrowIcon /></a></li>
     </ul>
   </article>
 </div>
 
 <style>
-  .audience-grid { display: grid; grid-template-columns: 1fr 1fr; border: 2px solid var(--color-ink); }
-  article { min-height: 29rem; padding: clamp(1.5rem, 4vw, 3.25rem); }
-  article + article { border-left: 2px solid var(--color-ink); background: var(--color-paper-blue); }
-  h3 { max-width: 28rem; margin-bottom: 1.5rem; font-size: clamp(2rem, 4vw, 3.25rem); }
+  .audience-grid { display: grid; grid-template-columns: 1fr 1fr; border-top: 4px solid var(--color-ink); border-bottom: var(--rule); }
+  article { min-height: 26rem; padding: clamp(1.5rem, 4vw, 3.25rem); }
+  article + article { border-left: 2px solid var(--color-ink); background: white; }
+  h3 { max-width: 29rem; margin-bottom: 1.5rem; font-size: clamp(2rem, 4vw, 3.25rem); }
   article > p:not(.section-number) { max-width: 31rem; }
   ul { margin: 3rem 0 0; padding: 0; list-style: none; }
   li { border-top: var(--rule); }

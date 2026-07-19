@@ -1,12 +1,15 @@
 .article-shell {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(12rem, 16rem);
-  gap: clamp(3rem, 7vw, 7.5rem);
+  grid-template-columns: minmax(9.5rem, 11rem) minmax(0, var(--reading-width)) minmax(13rem, 16rem);
+  justify-content: space-between;
+  gap: clamp(2rem, 4vw, 4rem);
   align-items: start;
 }
 
 .article-body {
+  min-width: 0;
   max-width: var(--reading-width);
+  overflow-wrap: anywhere;
 }
 
 .article-body > :where(h2, h3) {
@@ -47,13 +50,17 @@
 }
 
 .article-body table {
+  display: block;
   width: 100%;
+  max-width: 100%;
   margin-block: 2rem;
   border-collapse: collapse;
+  overflow-x: auto;
 }
 
 .article-body th,
 .article-body td {
+  min-width: 9rem;
   border-bottom: var(--rule);
   padding: 0.8rem 0.5rem;
   text-align: left;

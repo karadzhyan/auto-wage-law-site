@@ -31,10 +31,3 @@ Exemption and piece-rate questions therefore belong to the individual role and p
 - Review required uniforms, devices, mileage, tools, and safety equipment.
 
 The same department can contain materially different analyses, so conclusions should follow role-specific records.
-
-## Primary sources
-
-- [29 U.S.C. § 213](https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title29-section213&num=0&edition=prelim)
-- [California Labor Code § 226.2](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=226.2)
-- [California Labor Code § 226.7](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=226.7)
-- [California Labor Code § 2775](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=2775)

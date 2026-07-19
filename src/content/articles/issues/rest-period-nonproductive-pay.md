@@ -29,9 +29,3 @@ The classification of the payment method matters: a piece rate, commission, hour
 - Keep statutory rest-pay calculations separate from overtime regular-rate calculations.
 
 These questions require the plan, statements, time records, and transaction history together.
-
-## Primary sources
-
-- [California Labor Code § 226.2](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=226.2)
-- [California Labor Code § 226.7](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=226.7)
-- [California IWC wage orders](https://www.dir.ca.gov/iwc/wageorderindustries.htm)

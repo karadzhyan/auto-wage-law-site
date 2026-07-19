@@ -29,9 +29,3 @@ Different payment forms may require different allocation periods or divisors. A 
 - Confirm that later-paid incentive amounts trigger any required recalculation.
 
 The correct method depends on the payment's substance, timing, and jurisdiction.
-
-## Primary sources
-
-- [29 C.F.R. Part 778](https://www.ecfr.gov/current/title-29/subtitle-B/chapter-V/subchapter-B/part-778)
-- [29 U.S.C. § 207](https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title29-section207&num=0&edition=prelim)
-- [California Labor Code § 226.7](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=226.7)

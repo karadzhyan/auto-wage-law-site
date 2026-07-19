@@ -27,8 +27,3 @@ The wage-order hand-tool provision includes an earnings threshold, but the gover
 - Review phone, mileage, and other necessary-business-expense reimbursement methods.
 
 Expense treatment depends on necessity, employer direction, the governing order, and the actual reimbursement record.
-
-## Primary sources
-
-- [California Labor Code § 2802](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=2802)
-- [California IWC wage orders](https://www.dir.ca.gov/iwc/wageorderindustries.htm)

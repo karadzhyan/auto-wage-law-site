@@ -3,6 +3,7 @@ import type { MarkdownHeading } from 'astro';
 import BaseLayout from './BaseLayout.astro';
 import AuthorityCallout from '../components/AuthorityCallout.astro';
 import WorkdayTimeline from '../components/WorkdayTimeline.astro';
+import { issues, payPlans } from '../data/library';
 import '../styles/article.css';
 
 interface Source { label: string; url: string; }
@@ -21,6 +22,7 @@ interface Props {
 const { title, description, section, reviewed, sources, related, headings, feature } = Astro.props;
 const sectionLabel = section === 'pay-plans' ? 'Pay plans' : 'Issues';
 const toc = headings.filter((heading) => heading.depth === 2);
+const relatedTitles = new Map([...payPlans, ...issues].map((entry) => [entry.href, entry.title]));
 ---
 
 <BaseLayout title={title} description={description}>
@@ -45,7 +47,7 @@ const toc = headings.filter((heading) => heading.depth === 2);
           <aside class="related">
             <p class="data-label">Continue the review</p>
             <div>
-              {related.map((href) => <a href={href}>{href.replaceAll('-', ' ').replaceAll('/', ' ').trim()} <span aria-hidden="true">→</span></a>)}
+              {related.map((href) => <a href={href}>{relatedTitles.get(href) ?? 'Related guide'} <span aria-hidden="true">→</span></a>)}
             </div>
           </aside>
         )}

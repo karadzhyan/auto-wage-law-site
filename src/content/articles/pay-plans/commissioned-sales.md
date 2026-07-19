@@ -33,11 +33,3 @@ Federal and California commissioned-employee overtime rules use different tests.
 - Separate recoverable advances from compensation allocated to working time and rest periods.
 
 The details of the plan and the pay-period records control the analysis; these checkpoints do not determine an individual result.
-
-## Primary sources
-
-- [29 U.S.C. § 207](https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title29-section207&num=0&edition=prelim)
-- [29 U.S.C. § 213](https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title29-section213&num=0&edition=prelim)
-- [California Labor Code § 2751](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=2751)
-- [California Labor Code § 204.1](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=204.1)
-- [California IWC wage orders](https://www.dir.ca.gov/iwc/wageorderindustries.htm)

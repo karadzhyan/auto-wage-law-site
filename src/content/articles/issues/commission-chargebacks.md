@@ -29,9 +29,3 @@ Packs and pooled deductions require the same precision: the label applied by pay
 - Review draw reconciliations, final-pay treatment, and later statement adjustments separately.
 
 The treatment of any debit depends on the plan language, the condition, and the applicable law; this framework does not classify a particular chargeback.
-
-## Primary sources
-
-- [California Labor Code § 2751](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=2751)
-- [California Labor Code § 204.1](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=204.1)
-- [California Labor Code §§ 221–223](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=221)

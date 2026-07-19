@@ -31,10 +31,3 @@ A federal exemption does not necessarily supply a parallel state exemption, and 
 - Re-run the analysis when duties or pay-plan components change.
 
 An exemption analysis is fact-specific and should be confirmed against current law and complete records.
-
-## Primary sources
-
-- [29 U.S.C. § 213](https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title29-section213&num=0&edition=prelim)
-- [29 U.S.C. § 207](https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title29-section207&num=0&edition=prelim)
-- [29 C.F.R. § 541.602](https://www.ecfr.gov/current/title-29/subtitle-B/chapter-V/subchapter-A/part-541/subpart-G/section-541.602)
-- [California Labor Code § 510](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=510)

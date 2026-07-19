@@ -39,7 +39,7 @@ export function evaluatePayPlan(input: PayPlanInput): PayPlanFinding {
 
   if (potentialGapHours > 0) {
     reasons.push(
-      `The inputs show ${input.onsiteHours} onsite hours and ${input.paidHours} paid or separately accounted hours — a ${potentialGapHours}-hour difference.`,
+      `The inputs show ${input.onsiteHours} onsite hours and ${input.paidHours} paid or separately accounted hours — a difference of ${potentialGapHours} hours.`,
     );
   } else if (recordsDiffer) {
     reasons.push('Paid or separately accounted hours exceed the onsite-hours input. Reconcile the two records.');

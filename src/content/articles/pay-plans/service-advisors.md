@@ -31,10 +31,3 @@ The federal dealership exemption for service advisors does not automatically dec
 - Review how reversals, warranty decisions, and service-contract cancellations affect previously credited pay.
 
 A role label is not a substitute for the governing duties, pay plan, records, and jurisdiction.
-
-## Primary sources
-
-- [29 U.S.C. § 213](https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title29-section213&num=0&edition=prelim)
-- [California Labor Code § 204.1](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=204.1)
-- [California Labor Code § 226.7](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=226.7)
-- [California IWC wage orders](https://www.dir.ca.gov/iwc/wageorderindustries.htm)

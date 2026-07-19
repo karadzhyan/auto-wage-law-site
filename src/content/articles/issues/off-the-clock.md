@@ -29,9 +29,3 @@ Federal and California standards are not identical. Whether a particular activit
 - Preserve evidence of both required activity and opportunities to report time.
 
 A timestamp is a lead for factual review, not by itself a determination that compensable work occurred.
-
-## Primary sources
-
-- [29 C.F.R. Part 785](https://www.ecfr.gov/current/title-29/subtitle-B/chapter-V/subchapter-B/part-785)
-- [California Labor Code § 510](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=510)
-- [California Labor Code § 1174](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=1174)

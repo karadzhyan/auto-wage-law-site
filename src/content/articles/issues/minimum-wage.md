@@ -29,9 +29,3 @@ The applicable floor may also vary by year and locality. A site-wide figure shou
 - Check whether a piece-rate plan separately addresses rest and nonproductive time.
 
 The calculation is an orientation exercise until the complete time and payroll records are aligned.
-
-## Primary sources
-
-- [California Labor Code § 226.2](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=226.2)
-- [California IWC wage orders](https://www.dir.ca.gov/iwc/wageorderindustries.htm)
-- [California Labor Code § 510](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=510)

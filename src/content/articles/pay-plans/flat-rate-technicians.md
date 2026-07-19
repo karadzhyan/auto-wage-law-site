@@ -32,10 +32,3 @@ California's piece-rate rules address separate compensation for rest-and-recover
 - Confirm which wage order applies before evaluating tools, uniforms, or equipment.
 
 The result depends on the written plan, time records, payroll calculations, and applicable jurisdiction. This page is an orientation aid, not a conclusion about a particular workplace.
-
-## Primary sources
-
-- [California Labor Code § 226.2](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=226.2)
-- [29 U.S.C. § 213](https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title29-section213&num=0&edition=prelim)
-- [California IWC wage orders](https://www.dir.ca.gov/iwc/wageorderindustries.htm)
-- [California Labor Code § 2802](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=2802)

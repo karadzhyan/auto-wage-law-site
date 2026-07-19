@@ -31,10 +31,3 @@ Section 7(i) can be relevant, but the establishment, regular-rate, commission-sh
 - Trace product cancellations and funding reversals to the written chargeback terms.
 
 These checks organize the factual record; they do not establish exemption status or the treatment of a particular payment.
-
-## Primary sources
-
-- [29 U.S.C. § 207](https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title29-section207&num=0&edition=prelim)
-- [29 C.F.R. § 541.602](https://www.ecfr.gov/current/title-29/subtitle-B/chapter-V/subchapter-A/part-541/subpart-G/section-541.602)
-- [California Labor Code § 2751](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=2751)
-- [California Labor Code § 204.1](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=204.1)

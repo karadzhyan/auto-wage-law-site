@@ -29,9 +29,3 @@ When a premium is due, the applicable rate can include more than the stated base
 - Verify the rate and statement treatment used for any paid premium.
 
 Recorded exceptions should be investigated, not treated as automatic proof of a legal conclusion.
-
-## Primary sources
-
-- [California Labor Code § 226.7](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=226.7)
-- [California IWC wage orders](https://www.dir.ca.gov/iwc/wageorderindustries.htm)
-- [California Labor Code § 226](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=LAB&sectionNum=226)

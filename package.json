@@ -1,0 +1,27 @@
+{
+  "name": "auto-wage-law-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "node --test",
+    "check": "astro check && npm test && astro build"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "3.7.3",
+    "@fontsource-variable/archivo": "5.2.8",
+    "@fontsource-variable/source-sans-3": "5.2.9",
+    "@fontsource/ibm-plex-mono": "5.2.7",
+    "astro": "7.1.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.9",
+    "typescript": "6.0.3"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  }
+}

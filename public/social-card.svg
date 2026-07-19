@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Auto Wage Law</title>
+  <desc id="desc">Dealership pay, measured against the law.</desc>
+  <rect width="1200" height="630" fill="#fff"/>
+  <path d="M0 0h32v630H0z" fill="#2457ff"/>
+  <path d="M80 108h1040" stroke="#cbd7e5"/>
+  <text x="80" y="78" fill="#10243e" font-family="Arial, sans-serif" font-size="28" font-weight="700">AUTO WAGE LAW</text>
+  <text x="80" y="245" fill="#10243e" font-family="Arial Narrow, Arial, sans-serif" font-size="92" font-weight="700">Dealership pay,</text>
+  <text x="80" y="345" fill="#10243e" font-family="Arial Narrow, Arial, sans-serif" font-size="92" font-weight="700">measured against the law.</text>
+  <text x="80" y="445" fill="#303943" font-family="Arial, sans-serif" font-size="32">Independent guidance for retail automotive.</text>
+  <path d="M80 535h1040" stroke="#10243e" stroke-width="3"/>
+  <circle cx="80" cy="535" r="10" fill="#2457ff"/>
+  <circle cx="600" cy="535" r="10" fill="#2457ff"/>
+  <circle cx="1120" cy="535" r="10" fill="#2457ff"/>
+</svg>

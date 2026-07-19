@@ -1,0 +1,43 @@
+:root {
+  --color-canvas: #ffffff;
+  --color-ink: #10243e;
+  --color-text: #303943;
+  --color-muted: #66758a;
+  --color-cobalt: #2457ff;
+  --color-cobalt-dark: #1740c9;
+  --color-mist: #eaf1f8;
+  --color-rule: #cbd7e5;
+  --color-signal: #f05a47;
+  --color-positive: #257b62;
+  --color-paper-blue: #f5f8fc;
+
+  --font-display: 'Archivo Variable', 'Arial Narrow', sans-serif;
+  --font-body: 'Source Sans 3 Variable', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --text-xs: clamp(0.72rem, 0.69rem + 0.1vw, 0.78rem);
+  --text-sm: clamp(0.88rem, 0.84rem + 0.12vw, 0.96rem);
+  --text-body: clamp(1.02rem, 0.96rem + 0.2vw, 1.14rem);
+  --text-lead: clamp(1.18rem, 1.05rem + 0.42vw, 1.5rem);
+  --text-h3: clamp(1.35rem, 1.1rem + 0.75vw, 1.9rem);
+  --text-h2: clamp(2rem, 1.45rem + 2vw, 3.4rem);
+  --text-h1: clamp(3.25rem, 2.05rem + 4.75vw, 6.8rem);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+  --space-9: 6.5rem;
+
+  --page-pad: clamp(1.25rem, 4vw, 3.5rem);
+  --content-width: 77.5rem;
+  --reading-width: 46rem;
+  --rule: 1px solid var(--color-rule);
+  --radius-control: 2px;
+  --radius-sheet: 4px;
+  --transition: 180ms ease;
+}

@@ -1,0 +1,98 @@
+---
+const roles = [
+  { label: 'Technician', x: 8, links: ['Time', 'Piece rate'] },
+  { label: 'Sales', x: 29, links: ['Commission', 'Overtime'] },
+  { label: 'Advisor', x: 50, links: ['Exemption', 'Premiums'] },
+  { label: 'F&I', x: 71, links: ['Chargebacks', 'Regular rate'] },
+  { label: 'Support', x: 92, links: ['Hours', 'Expenses'] },
+];
+---
+
+<div class="diagnostic" aria-labelledby="diagnostic-title">
+  <div class="diagnostic-head">
+    <p class="data-label">Diagnostic map · begin with the role</p>
+    <p id="diagnostic-title">Pay system → recorded time → legal floor</p>
+  </div>
+  <div class="diagnostic-line" aria-hidden="true">
+    <span class="line-fill"></span>
+    {roles.map((role) => <span class="line-node" style={`--x:${role.x}%`}></span>)}
+  </div>
+  <ol>
+    {roles.map((role) => (
+      <li>
+        <strong>{role.label}</strong>
+        <span>{role.links.join(' · ')}</span>
+      </li>
+    ))}
+  </ol>
+</div>
+
+<style>
+  .diagnostic {
+    margin-top: clamp(3.5rem, 8vw, 7rem);
+    border-top: 3px solid var(--color-ink);
+    border-bottom: var(--rule);
+    padding: 1.25rem 0 1.5rem;
+  }
+
+  .diagnostic-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .diagnostic-head p { margin: 0; }
+  .diagnostic-head > :last-child { color: var(--color-muted); font-family: var(--font-mono); font-size: var(--text-xs); }
+
+  .diagnostic-line {
+    position: relative;
+    height: 3rem;
+    margin: 0 2.5%;
+  }
+
+  .line-fill {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: 0;
+    height: 2px;
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: line-draw 650ms 120ms ease-out forwards;
+    background: var(--color-cobalt);
+  }
+
+  .line-node {
+    position: absolute;
+    top: 50%;
+    left: var(--x);
+    width: 0.78rem;
+    height: 0.78rem;
+    transform: translate(-50%, -50%);
+    border: 2px solid var(--color-cobalt);
+    background: white;
+  }
+
+  ol {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li { min-width: 0; text-align: center; }
+  li strong { display: block; color: var(--color-ink); font-family: var(--font-display); font-size: 1rem; }
+  li span { display: block; margin-top: 0.2rem; color: var(--color-muted); font-family: var(--font-mono); font-size: 0.59rem; line-height: 1.4; }
+
+  @keyframes line-draw { to { transform: scaleX(1); } }
+
+  @media (max-width: 42rem) {
+    .diagnostic-head > :last-child { display: none; }
+    .diagnostic-line { display: none; }
+    ol { grid-template-columns: 1fr; gap: 0; border-top: var(--rule); }
+    li { display: flex; justify-content: space-between; gap: 1rem; border-bottom: var(--rule); padding: 0.75rem 0; text-align: left; }
+    li span { text-align: right; }
+  }
+</style>

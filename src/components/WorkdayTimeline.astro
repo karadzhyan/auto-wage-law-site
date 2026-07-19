@@ -1,0 +1,136 @@
+<figure class="workday" aria-labelledby="workday-title">
+  <figcaption>
+    <span class="data-label">One workday · two clocks</span>
+    <strong id="workday-title">Flag production does not describe every hour at the dealership.</strong>
+  </figcaption>
+  <div class="timeline" role="img" aria-label="An illustrative workday showing clock time and flag-producing repair orders">
+    <div class="timeline-label">Clock</div>
+    <div class="clock-track">
+      <span>7:30</span><span>10:00</span><span>12:30</span><span>3:00</span><span>5:30</span>
+    </div>
+    <div class="timeline-label">Work</div>
+    <div class="work-track">
+      <span class="block block--meeting">Meeting</span>
+      <span class="block block--repair">RO 1842</span>
+      <span class="block block--wait">Wait</span>
+      <span class="block block--repair">RO 1901</span>
+      <span class="block block--wait">Parts</span>
+      <span class="block block--repair">RO 1914</span>
+    </div>
+    <div class="timeline-label">Pay record</div>
+    <div class="pay-track">
+      <span class="pay-line"></span>
+      <span class="pay-point" style="--x: 18%">Flag</span>
+      <span class="pay-point" style="--x: 56%">Flag</span>
+      <span class="pay-point" style="--x: 88%">Flag</span>
+    </div>
+  </div>
+  <p class="timeline-note">Illustrative only. Compare the time record, repair orders, payroll detail, and written pay plan together.</p>
+</figure>
+
+<style>
+  .workday {
+    margin: 3rem 0;
+    border: 2px solid var(--color-ink);
+    padding: clamp(1.2rem, 4vw, 2rem);
+    background: white;
+  }
+
+  figcaption strong {
+    display: block;
+    max-width: 38rem;
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 3vw, 2.35rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+
+  .timeline {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr;
+    gap: 0.85rem 1rem;
+    margin-top: 2rem;
+  }
+
+  .timeline-label {
+    align-self: center;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .clock-track,
+  .work-track,
+  .pay-track {
+    position: relative;
+    min-height: 2.5rem;
+  }
+
+  .clock-track {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid var(--color-ink);
+    padding-top: 0.4rem;
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+  }
+
+  .work-track { display: flex; gap: 2px; }
+
+  .block {
+    display: grid;
+    min-width: 0;
+    place-items: center;
+    padding: 0.45rem 0.25rem;
+    overflow: hidden;
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .block--repair { flex: 3; background: var(--color-cobalt); color: white; }
+  .block--wait { flex: 1.5; background: var(--color-mist); }
+  .block--meeting { flex: 1.2; border: 1px solid var(--color-rule); }
+
+  .pay-line {
+    position: absolute;
+    top: 1rem;
+    right: 0;
+    left: 0;
+    height: 2px;
+    background: var(--color-ink);
+  }
+
+  .pay-point {
+    position: absolute;
+    top: 0.3rem;
+    left: var(--x);
+    transform: translateX(-50%);
+    border: 1px solid var(--color-cobalt);
+    padding: 0.15rem 0.35rem;
+    background: white;
+    color: var(--color-cobalt-dark);
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    font-weight: 600;
+  }
+
+  .timeline-note {
+    margin: 1.5rem 0 0;
+    border-top: var(--rule);
+    padding-top: 0.85rem;
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+  }
+
+  @media (max-width: 38rem) {
+    .timeline { grid-template-columns: 1fr; }
+    .timeline-label { margin-top: 0.6rem; }
+    .block { writing-mode: vertical-rl; min-height: 4.5rem; }
+  }
+</style>

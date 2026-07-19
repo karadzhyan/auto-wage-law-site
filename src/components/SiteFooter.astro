@@ -1,0 +1,105 @@
+---
+import { footerNavigation, primaryNavigation } from '../data/navigation';
+import { site } from '../data/site';
+---
+
+<footer class="site-footer">
+  <div class="shell footer-grid">
+    <div class="footer-lead">
+      <a class="footer-brand" href="/">Auto Wage Law</a>
+      <p>{site.shortDescription}</p>
+      <p class="footer-status">{site.status}</p>
+    </div>
+    <nav aria-label="Explore">
+      <p class="footer-label">Explore</p>
+      {primaryNavigation.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+    <nav aria-label="Project information">
+      <p class="footer-label">Project</p>
+      {footerNavigation.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+  </div>
+  <div class="shell footer-base">
+    <p>{site.reviewed}</p>
+    <p>California and federal orientation. Local ordinances are out of scope unless noted.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 4px solid var(--color-ink);
+    padding-top: var(--space-8);
+    background: var(--color-ink);
+    color: #fff;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: minmax(16rem, 2fr) repeat(2, minmax(9rem, 1fr));
+    gap: var(--space-7);
+    padding-bottom: var(--space-8);
+  }
+
+  .footer-brand {
+    color: white;
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 650;
+    letter-spacing: -0.04em;
+    text-decoration: none;
+  }
+
+  .footer-lead p {
+    max-width: 25rem;
+    margin: 0.75rem 0 0;
+    color: #dbe5f1;
+  }
+
+  .footer-lead .footer-status {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: #aebdd0;
+  }
+
+  .footer-label {
+    margin-bottom: 1rem;
+    color: #91a5bd;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  nav a {
+    display: block;
+    width: fit-content;
+    margin-top: 0.55rem;
+    color: white;
+    font-size: 0.96rem;
+    text-decoration: none;
+  }
+
+  nav a:hover { color: #9ab3ff; }
+
+  .footer-base {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-5);
+    border-top: 1px solid #344a64;
+    padding-block: 1.25rem;
+  }
+
+  .footer-base p {
+    margin: 0;
+    color: #aebdd0;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+
+  @media (max-width: 46rem) {
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .footer-lead { grid-column: 1 / -1; }
+    .footer-base { display: block; }
+    .footer-base p + p { margin-top: 0.5rem; }
+  }
+</style>

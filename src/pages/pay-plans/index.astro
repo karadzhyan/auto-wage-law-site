@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RoleNavigator from '../../components/RoleNavigator.astro';
+---
+
+<BaseLayout title="Pay plans" description="Start with the dealership role and the mechanics of its pay plan.">
+  <main id="main-content">
+    <header class="index-hero shell"><p class="eyebrow">Five role maps</p><h1>Find your pay plan.</h1><p class="lede">The same dealership can run five compensation systems at once. Choose the closest role, then check the actual work and records.</p></header>
+    <section class="shell section section--ruled"><RoleNavigator /></section>
+  </main>
+</BaseLayout>
+
+<style>.index-hero { padding-block: var(--space-9); } .index-hero h1 { margin-bottom: 1.5rem; }</style>

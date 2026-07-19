@@ -1,0 +1,121 @@
+---
+import type { MarkdownHeading } from 'astro';
+import BaseLayout from './BaseLayout.astro';
+import AuthorityCallout from '../components/AuthorityCallout.astro';
+import WorkdayTimeline from '../components/WorkdayTimeline.astro';
+import '../styles/article.css';
+
+interface Source { label: string; url: string; }
+interface Props {
+  title: string;
+  description: string;
+  section: 'pay-plans' | 'issues';
+  reviewed: string;
+  confidence: 'reviewed';
+  sources: Source[];
+  related: string[];
+  headings: MarkdownHeading[];
+  feature?: 'workday-timeline';
+}
+
+const { title, description, section, reviewed, sources, related, headings, feature } = Astro.props;
+const sectionLabel = section === 'pay-plans' ? 'Pay plans' : 'Issues';
+const toc = headings.filter((heading) => heading.depth === 2);
+---
+
+<BaseLayout title={title} description={description}>
+  <main id="main-content">
+    <header class="article-hero">
+      <div class="shell">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span>
+          <a href={`/${section}/`}>{sectionLabel}</a>
+        </nav>
+        <p class="eyebrow">{sectionLabel} · {reviewed}</p>
+        <h1>{title}</h1>
+        <p class="lede">{description}</p>
+      </div>
+    </header>
+    <div class="shell section article-shell">
+      <article class="article-body">
+        {feature === 'workday-timeline' && <WorkdayTimeline />}
+        <slot />
+        <AuthorityCallout sources={sources} />
+        {related.length > 0 && (
+          <aside class="related">
+            <p class="data-label">Continue the review</p>
+            <div>
+              {related.map((href) => <a href={href}>{href.replaceAll('-', ' ').replaceAll('/', ' ').trim()} <span aria-hidden="true">→</span></a>)}
+            </div>
+          </aside>
+        )}
+      </article>
+      <aside class="article-rail no-print" aria-label="On this page">
+        <p class="data-label">On this page</p>
+        {toc.length > 0 ? (
+          <ol>{toc.map((heading) => <li><a href={`#${heading.slug}`}>{heading.text}</a></li>)}</ol>
+        ) : <p>Article overview</p>}
+        <div class="review-stamp">
+          <span>Editorial status</span>
+          <strong>Reviewed</strong>
+          <small>{reviewed}</small>
+        </div>
+      </aside>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .article-hero {
+    border-bottom: var(--rule);
+    padding-block: clamp(3.5rem, 8vw, 7rem);
+    background: linear-gradient(90deg, var(--color-paper-blue) 0 18%, white 18% 100%);
+  }
+
+  .article-hero h1 { max-width: 58rem; margin-bottom: 1.5rem; }
+
+  .breadcrumbs {
+    display: flex;
+    gap: 0.55rem;
+    margin-bottom: 3rem;
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+  }
+
+  .breadcrumbs a { color: var(--color-cobalt-dark); }
+
+  .article-rail {
+    position: sticky;
+    top: 2rem;
+    border-top: 3px solid var(--color-ink);
+    padding-top: 1rem;
+  }
+
+  .article-rail ol { margin: 0; padding-left: 1.2rem; }
+  .article-rail li + li { margin-top: 0.75rem; }
+  .article-rail li,
+  .article-rail a { font-size: 0.9rem; }
+
+  .review-stamp {
+    display: grid;
+    margin-top: 2rem;
+    border: 1px solid var(--color-positive);
+    padding: 0.9rem;
+    color: var(--color-positive);
+    font-family: var(--font-mono);
+  }
+
+  .review-stamp span,
+  .review-stamp small { font-size: 0.65rem; text-transform: uppercase; }
+  .review-stamp strong { margin-block: 0.1rem; font-family: var(--font-display); font-size: 1.4rem; }
+
+  .related { margin-top: 4rem; border-top: 3px solid var(--color-ink); padding-top: 1.5rem; }
+  .related div { display: grid; }
+  .related a { border-bottom: var(--rule); padding-block: 0.8rem; color: var(--color-ink); font-weight: 700; text-transform: capitalize; }
+
+  @media (max-width: 56rem) {
+    .article-rail { display: none; }
+    .article-hero { background: linear-gradient(180deg, var(--color-paper-blue) 0 0.5rem, white 0.5rem 100%); }
+  }
+</style>

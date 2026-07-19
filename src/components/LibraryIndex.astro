@@ -1,0 +1,25 @@
+---
+import { issues } from '../data/library';
+import ArrowIcon from './ArrowIcon.astro';
+---
+
+<div class="library-index">
+  {issues.map((issue) => (
+    <a href={issue.href}>
+      <span class="issue-number">{issue.number}</span>
+      <span><strong>{issue.title}</strong><small>{issue.description}</small></span>
+      <ArrowIcon />
+    </a>
+  ))}
+</div>
+
+<style>
+  .library-index { display: grid; grid-template-columns: 1fr 1fr; border-top: 3px solid var(--color-ink); }
+  a { display: grid; grid-template-columns: 2.5rem 1fr 1.25rem; gap: 1rem; min-height: 8.5rem; align-items: start; border-bottom: var(--rule); padding: 1.5rem 1.5rem 1.5rem 0; color: var(--color-text); text-decoration: none; }
+  a:nth-child(even) { border-left: var(--rule); padding-right: 0; padding-left: 1.5rem; }
+  a:hover { background: var(--color-paper-blue); }
+  .issue-number { color: var(--color-cobalt-dark); font-family: var(--font-mono); font-size: var(--text-xs); }
+  strong { display: block; color: var(--color-ink); font-family: var(--font-display); font-size: 1.35rem; letter-spacing: -0.025em; line-height: 1.05; }
+  small { display: block; margin-top: 0.6rem; color: var(--color-muted); font-size: 0.88rem; line-height: 1.4; }
+  @media (max-width: 43rem) { .library-index { grid-template-columns: 1fr; } a:nth-child(even) { border-left: 0; padding-left: 0; } }
+</style>

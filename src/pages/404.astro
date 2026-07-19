@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Page not found" description="The requested Auto Wage Law page could not be found." noindex>
+  <main id="main-content" class="shell missing">
+    <p class="eyebrow">Error 404 · route not found</p>
+    <h1>This line does not connect.</h1>
+    <p class="lede">The page may have moved. Start with a pay plan, an issue, or a browser-local review tool.</p>
+    <div class="button-row">
+      <a class="button" href="/pay-plans/">Find a pay plan</a>
+      <a class="button button--quiet" href="/law-library/">Open the law library</a>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .missing { min-height: 70vh; padding-block: var(--space-9); }
+  .missing h1 { max-width: 55rem; margin-bottom: 1.5rem; }
+  .missing .button-row { margin-top: 2rem; }
+</style>

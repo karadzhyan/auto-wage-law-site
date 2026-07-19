@@ -1,0 +1,35 @@
+---
+interface Props {
+  kind: 'technician' | 'sales' | 'advisor' | 'finance' | 'support';
+}
+const { kind } = Astro.props;
+const labels = {
+  technician: 'Technician',
+  sales: 'Sales',
+  advisor: 'Advisor',
+  finance: 'Finance',
+  support: 'Support',
+};
+---
+
+<svg class="role-icon" viewBox="0 0 48 48" role="img" aria-label={labels[kind]}>
+  <rect x="1" y="1" width="46" height="46" fill="none" stroke="currentColor" stroke-width="1.5" />
+  {kind === 'technician' && <path d="m15 34 9-9m-7-12 6 6-4 4-6-6 4-4Zm8 14 6-6 4 4-6 6-4-4Z" />}
+  {kind === 'sales' && <path d="M12 29h24l-3-9H17l-5 9Zm3 0v5m18-5v5M18 24h12" />}
+  {kind === 'advisor' && <path d="M15 14h18v21H15V14Zm5 6h8m-8 5h8m-8 5h5" />}
+  {kind === 'finance' && <path d="M13 17h22v18H13V17Zm0 5h22M20 29h8" />}
+  {kind === 'support' && <path d="M14 16h20v18H14V16Zm5-5v5m10-5v5M19 23h10m-10 5h7" />}
+</svg>
+
+<style>
+  .role-icon {
+    width: 3rem;
+    height: 3rem;
+    color: var(--color-cobalt);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+  }
+</style>

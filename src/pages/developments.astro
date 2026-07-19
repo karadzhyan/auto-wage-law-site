@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DevelopmentsList from '../components/DevelopmentsList.astro';
+---
+
+<BaseLayout title="Developments" description="Editorial reviews, product releases, and changes to Auto Wage Law.">
+  <main id="main-content">
+    <header class="developments-hero shell"><p class="eyebrow">Release and review log</p><h1>What moved.</h1><p class="lede">A dated record of editorial checks, tool changes, and material releases.</p></header>
+    <section class="shell section section--ruled"><DevelopmentsList /></section>
+  </main>
+</BaseLayout>
+
+<style>
+  .developments-hero { padding-block: var(--space-9); }
+  .developments-hero h1 { margin-bottom: 1.5rem; }
+</style>

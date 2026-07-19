@@ -1,0 +1,40 @@
+---
+import ArrowIcon from './ArrowIcon.astro';
+---
+
+<div class="audience-grid">
+  <article>
+    <p class="section-number">01 · Dealer side</p>
+    <h3>Find the exposure before the demand letter does.</h3>
+    <p>Trace a pay plan from written terms to time records, payroll detail, and the rule that controls each step.</p>
+    <ul>
+      <li><a href="/tools/pay-plan-check/">Check the pay-plan mechanics <ArrowIcon /></a></li>
+      <li><a href="/tools/exposure-snapshot/">Build a wages-only snapshot <ArrowIcon /></a></li>
+      <li><a href="/dealers/">Open the dealer review path <ArrowIcon /></a></li>
+    </ul>
+  </article>
+  <article>
+    <p class="section-number">02 · Worker side</p>
+    <h3>Know what your pay plan actually owes you.</h3>
+    <p>Match the role, the workday, and the wage statement before jumping to a legal conclusion.</p>
+    <ul>
+      <li><a href="/pay-plans/">Find your pay plan <ArrowIcon /></a></li>
+      <li><a href="/issues/off-the-clock/">Document time outside the record <ArrowIcon /></a></li>
+      <li><a href="/workers/">Open the worker review path <ArrowIcon /></a></li>
+    </ul>
+  </article>
+</div>
+
+<style>
+  .audience-grid { display: grid; grid-template-columns: 1fr 1fr; border: 2px solid var(--color-ink); }
+  article { min-height: 29rem; padding: clamp(1.5rem, 4vw, 3.25rem); }
+  article + article { border-left: 2px solid var(--color-ink); background: var(--color-paper-blue); }
+  h3 { max-width: 28rem; margin-bottom: 1.5rem; font-size: clamp(2rem, 4vw, 3.25rem); }
+  article > p:not(.section-number) { max-width: 31rem; }
+  ul { margin: 3rem 0 0; padding: 0; list-style: none; }
+  li { border-top: var(--rule); }
+  li:last-child { border-bottom: var(--rule); }
+  a { display: flex; min-height: 3.4rem; align-items: center; justify-content: space-between; gap: 1rem; color: var(--color-ink); font-weight: 700; text-decoration: none; }
+  a:hover { color: var(--color-cobalt-dark); }
+  @media (max-width: 46rem) { .audience-grid { grid-template-columns: 1fr; } article { min-height: auto; } article + article { border-top: 2px solid var(--color-ink); border-left: 0; } }
+</style>

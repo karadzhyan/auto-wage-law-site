@@ -1,0 +1,36 @@
+---
+import { payPlans } from '../data/library';
+import RoleIcon from './RoleIcon.astro';
+import ArrowIcon from './ArrowIcon.astro';
+---
+
+<div class="role-list">
+  {payPlans.map((role) => (
+    <a class="role-row" href={role.href}>
+      <span class="role-number">{role.number}</span>
+      <RoleIcon kind={role.icon!} />
+      <span class="role-copy"><strong>{role.title}</strong><span>{role.description}</span></span>
+      <ArrowIcon />
+    </a>
+  ))}
+</div>
+
+<style>
+  .role-list { border-top: 3px solid var(--color-ink); }
+  .role-row {
+    display: grid;
+    grid-template-columns: 2.5rem 3rem minmax(0, 1fr) 1.5rem;
+    gap: clamp(1rem, 3vw, 2.5rem);
+    align-items: center;
+    min-height: 8rem;
+    border-bottom: var(--rule);
+    color: var(--color-text);
+    text-decoration: none;
+    transition: background var(--transition), padding var(--transition);
+  }
+  .role-row:hover { padding-inline: 1rem; background: var(--color-paper-blue); }
+  .role-number { color: var(--color-cobalt-dark); font-family: var(--font-mono); font-size: var(--text-xs); }
+  .role-copy strong { display: block; color: var(--color-ink); font-family: var(--font-display); font-size: clamp(1.45rem, 2vw, 2rem); letter-spacing: -0.025em; }
+  .role-copy > span { display: block; max-width: 44rem; margin-top: 0.4rem; color: var(--color-muted); line-height: 1.45; }
+  @media (max-width: 38rem) { .role-row { grid-template-columns: 2rem 2.5rem 1fr; gap: 0.75rem; padding-block: 1.25rem; } .role-row > svg:last-child { display: none; } .role-copy > span { font-size: 0.9rem; } }
+</style>

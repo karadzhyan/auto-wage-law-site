@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { disclaimerSections, site } from '../data/site';
+---
+
+<BaseLayout title="Disclaimer" description="Scope, limitations, privacy, and legal status of Auto Wage Law content and instruments.">
+  <main id="main-content">
+    <header class="page-hero shell">
+      <p class="eyebrow">Read before relying · {site.reviewed}</p>
+      <h1>Orientation, not an answer.</h1>
+      <p class="lede">The boundary matters. This site helps frame questions; it does not resolve a specific legal situation.</p>
+    </header>
+    <div class="shell disclaimer-grid section section--ruled">
+      {disclaimerSections.map((section, index) => (
+        <section>
+          <p class="section-number">{String(index + 1).padStart(2, '0')}</p>
+          <h2>{section.title}</h2>
+          <p>{section.body}</p>
+        </section>
+      ))}
+      <aside class="counsel-note">
+        <p>For a specific situation — an audit, a demand letter, a pay-plan redesign, or a claim — see counsel. Both sides of the store have good lawyers; this site exists so the conversation starts from the real mechanics.</p>
+      </aside>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .page-hero { padding-block: var(--space-9); }
+  .page-hero h1 { max-width: 58rem; margin-bottom: 1.5rem; }
+  .disclaimer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  .disclaimer-grid section { min-height: 18rem; border-bottom: var(--rule); padding: 2rem clamp(0rem, 4vw, 3rem) 2rem 0; }
+  .disclaimer-grid section:nth-child(even) { border-left: var(--rule); padding-right: 0; padding-left: clamp(1.5rem, 4vw, 3rem); }
+  .disclaimer-grid h2 { font-size: clamp(1.6rem, 3vw, 2.5rem); }
+  .counsel-note { grid-column: 1 / -1; margin-top: 3rem; border-left: 5px solid var(--color-cobalt); padding: 1.5rem 2rem; background: var(--color-paper-blue); }
+  .counsel-note p { max-width: 52rem; margin: 0; color: var(--color-ink); font-size: var(--text-lead); }
+  @media (max-width: 44rem) { .disclaimer-grid { grid-template-columns: 1fr; } .disclaimer-grid section:nth-child(even) { border-left: 0; padding-left: 0; } .disclaimer-grid section { min-height: auto; } }
+</style>

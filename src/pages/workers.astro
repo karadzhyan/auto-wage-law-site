@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const steps = [
+  { number: '01', title: 'Find your role', body: 'Use the closest pay-plan page, then check whether the work and pay method actually match.', href: '/pay-plans/' },
+  { number: '02', title: 'Collect the same period', body: 'Keep the pay plan, wage statement, time record, schedule, and production detail for matching dates.', href: '/tools/pay-plan-check/' },
+  { number: '03', title: 'Write down the gap', body: 'Record meetings, waiting, training, opening, closing, or other work missing from the paid-time story.', href: '/issues/off-the-clock/' },
+  { number: '04', title: 'Check time limits and options', body: 'Deadlines and remedies depend on the claim and facts. A specific situation deserves specific advice.', href: '/disclaimer/' },
+];
+---
+
+<BaseLayout title="For workers" description="A practical path for understanding a dealership pay plan and organizing the records behind it.">
+  <main id="main-content">
+    <header class="audience-hero shell">
+      <p class="eyebrow">Worker path · understand the record</p>
+      <h1>Know what your pay plan actually owes you.</h1>
+      <p class="lede">Start with the role, the full workday, and a matched set of records. The label on a pay plan is not the end of the analysis.</p>
+    </header>
+    <section class="shell section review-path">
+      {steps.map((step) => (
+        <a href={step.href}>
+          <span>{step.number}</span><strong>{step.title}</strong><p>{step.body}</p><b aria-hidden="true">→</b>
+        </a>
+      ))}
+    </section>
+    <section class="worker-cta section">
+      <div class="shell"><p class="eyebrow">Start with the pay system</p><h2>Five dealership roles. Five different starting points.</h2><a class="button" href="/pay-plans/">Find your pay plan</a></div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .audience-hero { padding-block: var(--space-9); }
+  .audience-hero h1 { max-width: 69rem; margin-bottom: 1.5rem; }
+  .review-path { border-top: 3px solid var(--color-ink); }
+  .review-path a { display: grid; grid-template-columns: 3rem minmax(13rem, 1fr) minmax(18rem, 2fr) 2rem; gap: var(--space-5); align-items: center; min-height: 8rem; border-bottom: var(--rule); color: var(--color-text); text-decoration: none; }
+  .review-path a:hover { background: var(--color-paper-blue); }
+  .review-path span { color: var(--color-cobalt-dark); font-family: var(--font-mono); font-size: var(--text-xs); }
+  .review-path strong { color: var(--color-ink); font-family: var(--font-display); font-size: var(--text-h3); line-height: 1; }
+  .review-path p { margin: 0; color: var(--color-muted); }
+  .review-path b { color: var(--color-cobalt); font-size: 1.5rem; }
+  .worker-cta { background: var(--color-paper-blue); border-block: var(--rule); }
+  .worker-cta h2 { max-width: 55rem; }
+  @media (max-width: 48rem) { .review-path a { grid-template-columns: 2rem 1fr 1rem; padding-block: 1.5rem; } .review-path p { grid-column: 2 / -1; } }
+</style>

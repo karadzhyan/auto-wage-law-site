@@ -1,0 +1,206 @@
+---
+import { primaryNavigation } from '../data/navigation';
+import ArrowIcon from './ArrowIcon.astro';
+
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => href === '/' ? path === '/' : path.startsWith(href);
+---
+
+<header class="site-header no-print">
+  <div class="header-shell shell">
+    <a class="brand" href="/" aria-label="Auto Wage Law home">
+      <span class="brand-mark" aria-hidden="true">AWL</span>
+      <span class="brand-name">Auto Wage Law</span>
+    </a>
+    <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">
+      <span>Menu</span>
+      <span class="menu-lines" aria-hidden="true"></span>
+    </button>
+    <nav id="site-nav" class="site-nav" aria-label="Primary navigation">
+      {primaryNavigation.map((item) => (
+        <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
+      ))}
+      <a class="header-tool" href="/tools/pay-plan-check/">
+        Check a pay plan <ArrowIcon />
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const menuButton = document.querySelector<HTMLButtonElement>('.menu-button');
+  const siteNav = document.querySelector<HTMLElement>('#site-nav');
+
+  const closeMenu = () => {
+    menuButton?.setAttribute('aria-expanded', 'false');
+    siteNav?.removeAttribute('data-open');
+  };
+
+  menuButton?.addEventListener('click', () => {
+    const nextOpen = menuButton.getAttribute('aria-expanded') !== 'true';
+    menuButton.setAttribute('aria-expanded', String(nextOpen));
+    siteNav?.toggleAttribute('data-open', nextOpen);
+  });
+
+  siteNav?.addEventListener('click', (event) => {
+    if (event.target instanceof HTMLAnchorElement) closeMenu();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeMenu();
+      menuButton?.focus();
+    }
+  });
+</script>
+
+<style>
+  .site-header {
+    position: relative;
+    z-index: 20;
+    border-bottom: var(--rule);
+    background: rgb(255 255 255 / 96%);
+  }
+
+  .header-shell {
+    min-height: 5rem;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: var(--space-6);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.85rem;
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+
+  .brand-mark {
+    display: grid;
+    width: 2.45rem;
+    height: 2.45rem;
+    place-items: center;
+    background: var(--color-ink);
+    color: white;
+    font-family: var(--font-display);
+    font-size: 0.74rem;
+    font-weight: 750;
+    letter-spacing: -0.03em;
+  }
+
+  .brand-name {
+    font-family: var(--font-display);
+    font-size: 1.08rem;
+    font-weight: 680;
+    letter-spacing: -0.025em;
+  }
+
+  .site-nav {
+    display: flex;
+    align-items: stretch;
+    gap: 1.55rem;
+  }
+
+  .site-nav > a {
+    display: inline-flex;
+    align-items: center;
+    border-bottom: 2px solid transparent;
+    color: var(--color-text);
+    font-size: 0.94rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .site-nav > a:hover,
+  .site-nav > a[aria-current='page'] {
+    border-bottom-color: var(--color-cobalt);
+    color: var(--color-ink);
+  }
+
+  .site-nav .header-tool {
+    align-self: center;
+    min-height: 2.8rem;
+    border: 1px solid var(--color-ink);
+    padding: 0 0.85rem;
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.01em;
+  }
+
+  .site-nav .header-tool:hover {
+    border-color: var(--color-cobalt);
+    background: var(--color-cobalt);
+    color: white;
+  }
+
+  .menu-button {
+    display: none;
+    align-items: center;
+    gap: 0.65rem;
+    border: 0;
+    background: transparent;
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .menu-lines,
+  .menu-lines::before,
+  .menu-lines::after {
+    width: 1.25rem;
+    height: 1px;
+    background: currentColor;
+  }
+
+  .menu-lines {
+    position: relative;
+  }
+
+  .menu-lines::before,
+  .menu-lines::after {
+    position: absolute;
+    left: 0;
+    content: '';
+  }
+
+  .menu-lines::before { top: -0.35rem; }
+  .menu-lines::after { top: 0.35rem; }
+
+  @media (max-width: 68rem) {
+    .menu-button { display: inline-flex; }
+
+    .site-nav {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      left: 0;
+      display: none;
+      padding: 0 var(--page-pad) 1.5rem;
+      border-bottom: 2px solid var(--color-ink);
+      background: white;
+    }
+
+    .site-nav[data-open] {
+      display: grid;
+    }
+
+    .site-nav > a,
+    .site-nav .header-tool {
+      min-height: 3.25rem;
+      border: 0;
+      border-bottom: var(--rule);
+    }
+
+    .site-nav .header-tool {
+      margin-top: 0.75rem;
+      border: 1px solid var(--color-ink);
+      justify-content: center;
+    }
+  }
+</style>

@@ -1,10 +1,95 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import DiagnosticRibbon from '../components/DiagnosticRibbon.astro';
+import AudienceSplit from '../components/AudienceSplit.astro';
+import RoleNavigator from '../components/RoleNavigator.astro';
+import ExposurePreview from '../components/ExposurePreview.astro';
+import LibraryIndex from '../components/LibraryIndex.astro';
+import DevelopmentsList from '../components/DevelopmentsList.astro';
 ---
 
-<BaseLayout title="Auto Wage Law" description="Wage-and-hour intelligence for retail automotive.">
-  <main id="main-content" class="shell section">
-    <p class="eyebrow">Independent educational resource</p>
-    <h1>Dealership pay, measured against the law.</h1>
+<BaseLayout title="Auto Wage Law" description="Independent guidance for the people who run dealerships and the people who work in them.">
+  <main id="main-content">
+    <section class="home-hero shell">
+      <div class="hero-meta">
+        <p class="eyebrow">Wage & hour intelligence · retail automotive</p>
+        <p>California + federal</p>
+      </div>
+      <div class="hero-grid">
+        <div>
+          <h1>Dealership pay,<br /><span>measured against the law.</span></h1>
+          <p class="lede">Independent guidance for the people who run dealerships and the people who work in them.</p>
+          <div class="button-row">
+            <a class="button" href="/pay-plans/">Find your pay plan</a>
+            <a class="button button--quiet" href="/dealers/">Run a self-audit</a>
+          </div>
+        </div>
+        <aside>
+          <span class="hero-index">AWL / 01</span>
+          <p>Flat-rate flags, front-end gross, draws, packs, and spiffs: map the compensation system before judging its result.</p>
+        </aside>
+      </div>
+      <DiagnosticRibbon />
+    </section>
+
+    <section class="section section--mist">
+      <div class="shell">
+        <div class="section-heading">
+          <div><p class="eyebrow">Choose the side of the counter</p><h2>Two paths. One set of pay records.</h2></div>
+          <p>The questions change by role. The underlying evidence usually does not.</p>
+        </div>
+        <AudienceSplit />
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="section-heading">
+        <div><p class="eyebrow">Pay-plan navigator</p><h2>Start with how the store pays.</h2></div>
+        <p>Each role opens a focused map of the pay mechanics, records, and legal tests worth inspecting.</p>
+      </div>
+      <RoleNavigator />
+    </section>
+
+    <section class="section section--mist">
+      <div class="shell">
+        <div class="section-heading">
+          <div><p class="eyebrow">Exposure snapshot</p><h2>Make the assumption visible.</h2></div>
+          <p>A directional model is useful only when the input, math, and exclusions stay in view.</p>
+        </div>
+        <ExposurePreview />
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="section-heading">
+        <div><p class="eyebrow">Open law library</p><h2>The collision points.</h2></div>
+        <p>Move from the pay system to the wage-and-hour issue without losing the dealership context.</p>
+      </div>
+      <LibraryIndex />
+    </section>
+
+    <section class="section section--mist">
+      <div class="shell">
+        <div class="section-heading">
+          <div><p class="eyebrow">Developments</p><h2>What moved.</h2></div>
+          <a class="text-link" href="/developments/">View the release log</a>
+        </div>
+        <DevelopmentsList />
+      </div>
+    </section>
   </main>
 </BaseLayout>
+
+<style>
+  .home-hero { padding-block: 2rem var(--space-9); }
+  .hero-meta { display: flex; justify-content: space-between; gap: 1rem; border-bottom: var(--rule); padding-bottom: 0.8rem; }
+  .hero-meta p { margin: 0; color: var(--color-muted); font-family: var(--font-mono); font-size: var(--text-xs); text-transform: uppercase; }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 9fr) minmax(14rem, 3fr); gap: var(--space-7); padding-top: clamp(3rem, 7vw, 6.5rem); }
+  .hero-grid h1 { max-width: 66rem; margin-bottom: 2rem; font-size: clamp(3.5rem, 8.4vw, 8rem); line-height: 0.84; }
+  .hero-grid h1 span { color: var(--color-cobalt); }
+  .hero-grid .lede { margin-bottom: 2rem; }
+  .hero-grid aside { align-self: end; border-top: 3px solid var(--color-ink); padding-top: 1rem; }
+  .hero-grid aside p { margin: 1rem 0 0; color: var(--color-muted); font-size: 0.95rem; }
+  .hero-index { color: var(--color-cobalt-dark); font-family: var(--font-mono); font-size: var(--text-xs); font-weight: 600; }
+  @media (max-width: 50rem) { .home-hero { padding-top: 1.25rem; } .hero-grid { grid-template-columns: 1fr; } .hero-grid aside { display: none; } .hero-meta p:last-child { display: none; } }
+</style>

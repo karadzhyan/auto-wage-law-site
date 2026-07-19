@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const steps = [
+  { number: '01', title: 'Name the pay system', body: 'Identify every rate, commission, draw, bonus, pack, chargeback, and claimed exemption.', href: '/pay-plans/' },
+  { number: '02', title: 'Reconcile time to pay', body: 'Compare schedules, punches, repair orders, deal jackets, payroll detail, and exception edits.', href: '/tools/pay-plan-check/' },
+  { number: '03', title: 'Find the governing floor', body: 'Separate federal questions, California questions, and any local rule that requires separate review.', href: '/law-library/' },
+  { number: '04', title: 'Size a narrow scenario', body: 'Use a wages-only illustration before adding penalties, fees, interest, premiums, and defenses.', href: '/tools/exposure-snapshot/' },
+];
+---
+
+<BaseLayout title="For dealers" description="A practical self-audit path for dealership operators, controllers, HR teams, and counsel.">
+  <main id="main-content">
+    <header class="audience-hero shell">
+      <p class="eyebrow">Dealer path · self-audit</p>
+      <h1>Find the exposure before the demand letter does.</h1>
+      <p class="lede">A usable review begins with the mechanics: who did what work, when the store recorded it, and how the plan converted it into pay.</p>
+    </header>
+    <section class="shell section review-path">
+      {steps.map((step) => (
+        <a href={step.href}>
+          <span>{step.number}</span><strong>{step.title}</strong><p>{step.body}</p><b aria-hidden="true">→</b>
+        </a>
+      ))}
+    </section>
+    <section class="dealer-cta section">
+      <div class="shell"><p class="eyebrow">Browser-local worksheet</p><h2>Put one plan through the sequence.</h2><a class="button" href="/tools/pay-plan-check/">Check a pay plan</a></div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .audience-hero { padding-block: var(--space-9); }
+  .audience-hero h1 { max-width: 69rem; margin-bottom: 1.5rem; }
+  .review-path { border-top: 3px solid var(--color-ink); }
+  .review-path a { display: grid; grid-template-columns: 3rem minmax(13rem, 1fr) minmax(18rem, 2fr) 2rem; gap: var(--space-5); align-items: center; min-height: 8rem; border-bottom: var(--rule); color: var(--color-text); text-decoration: none; }
+  .review-path a:hover { background: var(--color-paper-blue); }
+  .review-path span { color: var(--color-cobalt-dark); font-family: var(--font-mono); font-size: var(--text-xs); }
+  .review-path strong { color: var(--color-ink); font-family: var(--font-display); font-size: var(--text-h3); line-height: 1; }
+  .review-path p { margin: 0; color: var(--color-muted); }
+  .review-path b { color: var(--color-cobalt); font-size: 1.5rem; }
+  .dealer-cta { background: var(--color-ink); color: white; }
+  .dealer-cta h2 { max-width: 50rem; color: white; }
+  @media (max-width: 48rem) { .review-path a { grid-template-columns: 2rem 1fr 1rem; padding-block: 1.5rem; } .review-path p { grid-column: 2 / -1; } }
+</style>

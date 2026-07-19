@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout title="About" description="How Auto Wage Law selects, reviews, and presents dealership wage-and-hour information.">
+  <main id="main-content">
+    <header class="page-hero shell">
+      <p class="eyebrow">Project notes · {site.reviewed}</p>
+      <h1>Built around the pay system.</h1>
+      <p class="lede">Auto Wage Law is an independent educational resource about wage-and-hour law as it meets retail-automotive compensation.</p>
+    </header>
+    <div class="shell about-grid section section--ruled">
+      <section>
+        <h2>What this site does</h2>
+        <p>Dealership compensation has its own vocabulary: flags, packs, minis, draws, spiffs, CSI bonuses, and chargebacks. The site begins with those mechanics, then connects them to the rules that govern time, wages, overtime, records, and expenses.</p>
+        <p>It is built for operators, controllers, HR teams, workers, and counsel who need a sharper first pass before a fact-specific review.</p>
+      </section>
+      <aside>
+        <p class="data-label">Editorial method</p>
+        <ol>
+          <li>Begin with primary public authorities.</li>
+          <li>Separate California and federal analysis.</li>
+          <li>Show assumptions beside every instrument.</li>
+          <li>Review constants each January and quarterly.</li>
+          <li>Stamp pages with the last editorial review.</li>
+        </ol>
+      </aside>
+      <section>
+        <h2>What this site does not do</h2>
+        <p>It does not decide whether a law was violated, value a claim, replace counsel, or map local ordinances unless a page expressly says otherwise. A useful orientation is not an individualized legal answer.</p>
+        <a class="text-link" href="/disclaimer/">Read the complete disclaimer</a>
+      </section>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .page-hero { padding-block: var(--space-9); }
+  .page-hero h1 { max-width: 52rem; margin-bottom: 1.5rem; }
+  .about-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr); gap: var(--space-8); }
+  .about-grid section:last-child { grid-column: 1 / -1; max-width: var(--reading-width); }
+  aside { border-top: 3px solid var(--color-cobalt); padding-top: 1.25rem; }
+  aside li + li { margin-top: 0.65rem; }
+  @media (max-width: 48rem) { .about-grid { grid-template-columns: 1fr; } .about-grid section:last-child { grid-column: auto; } }
+</style>

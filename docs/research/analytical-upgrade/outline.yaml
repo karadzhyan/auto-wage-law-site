@@ -1,0 +1,35 @@
+topic: "Retail-automotive wage-and-hour analytical architecture"
+current_as_of: "2026-07-18"
+scope:
+  jurisdictions:
+    - "Federal Fair Labor Standards Act"
+    - "California wage-and-hour law"
+  product_question: "How should a public educational product organize dealership pay facts, legal predicates, calculations, evidence, and consequences without converting incomplete inputs into legal conclusions?"
+items:
+  - id: federal_dealership_exemption
+    name: "FLSA section 13(b)(10) dealership exemption"
+  - id: federal_retail_commission
+    name: "FLSA section 7(i) retail commissioned-employee exemption"
+  - id: federal_hours_regular_rate
+    name: "Federal hours worked, recordkeeping, and regular rate"
+  - id: california_piece_rate
+    name: "California flat-rate and piece-rate compensation"
+  - id: california_time_breaks
+    name: "California hours worked, meal periods, rest periods, and premiums"
+  - id: california_regular_rate
+    name: "California overtime and regular-rate computation"
+  - id: commissions
+    name: "Commission earning rules, written plans, draws, reversals, packs, and chargebacks"
+  - id: expenses
+    name: "Tools, uniforms, devices, mileage, and necessary-business-expense reimbursement"
+  - id: records
+    name: "Time, payroll, production, transaction, plan, and establishment evidence"
+  - id: remedy_boundaries
+    name: "Liability, remedy, limitations, penalty, interest, fee, offset, and defense boundaries"
+execution:
+  batch_size: 3
+  items_per_agent: 4
+  output_dir: "docs/research/analytical-upgrade/results"
+  source_policy: "Official statutes, regulations, agency materials, and court opinions only"
+  review_policy: "Every current constant and time-sensitive proposition requires an explicit reviewed date"
+

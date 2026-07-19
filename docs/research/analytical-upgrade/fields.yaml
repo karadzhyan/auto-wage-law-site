@@ -1,0 +1,72 @@
+field_categories:
+  authority_identity:
+    detail_level: detailed
+    fields:
+      - name: authority_id
+        description: "Stable internal identifier used by pages and tools."
+      - name: jurisdiction
+        description: "Federal, California, or local scope."
+      - name: authority_type
+        description: "Statute, regulation, wage order, opinion, or official agency guidance."
+      - name: official_url
+        description: "Direct primary-source URL."
+      - name: reviewed
+        description: "Date through which current status was verified."
+  proposition:
+    detail_level: detailed
+    fields:
+      - name: rule
+        description: "The narrow legal proposition supported by the authority."
+      - name: predicates
+        description: "Facts that must exist before the rule applies."
+      - name: exclusions
+        description: "What the authority does not decide."
+      - name: jurisdictional_boundary
+        description: "Relationship to parallel federal, state, or local rules."
+      - name: temporal_boundary
+        description: "Workweek, pay period, representative period, earning period, or limitations-period unit."
+      - name: confidence_basis
+        description: "Why the proposition is stated at the chosen level of certainty."
+  evidence:
+    detail_level: detailed
+    fields:
+      - name: evidence_needed
+        description: "Records that support or contradict each predicate."
+      - name: missing_record_effect
+        description: "Whether absence creates uncertainty, an inference, a recordkeeping issue, or another consequence."
+      - name: system_sources
+        description: "DMS, CRM, repair-order, payroll, timekeeping, OEM training, schedule, communications, or establishment data."
+      - name: reconciliation_unit
+        description: "Dates and units that records must share before comparison."
+  reasoning:
+    detail_level: detailed
+    fields:
+      - name: common_conflation
+        description: "Concepts often collapsed but legally distinct."
+      - name: decision_sequence
+        description: "Order in which a disciplined analysis tests the issue."
+      - name: alternative_explanations
+        description: "Nonliability and liability-consistent explanations that the records may support."
+      - name: worked_example
+        description: "A bounded numerical or factual example that does not imply a conclusion."
+      - name: strategic_implication_dealer
+        description: "Operational audit or remediation consequence."
+      - name: strategic_implication_worker
+        description: "Record-preservation or question-framing consequence."
+  product_translation:
+    detail_level: detailed
+    fields:
+      - name: input
+        description: "Fact the user can reliably enter."
+      - name: derived_value
+        description: "Pure arithmetic or classification the product may calculate."
+      - name: finding
+        description: "Question, distinction, or unresolved predicate the product may surface."
+      - name: forbidden_conclusion
+        description: "Legal conclusion the product must not infer from incomplete inputs."
+      - name: next_record
+        description: "Specific proof that would advance the analysis."
+uncertain:
+  - "Local minimum-wage rates unless a location-and-date-specific source is reviewed"
+  - "Applicability of any exemption without complete duties, establishment, pay, period, and record facts"
+  - "Claim value, recoverability, limitations period, penalties, interest, fees, offsets, defenses, or class treatment"
